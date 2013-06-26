@@ -6,7 +6,7 @@ public class DeckVector {
 	public static String deck[];
 	public static int size;
 	
-	public void init(){
+	public static void init(){
 		deck = new String[32];
 		size = 32;
 		
@@ -21,10 +21,10 @@ public class DeckVector {
 		deck[2] = "r7";
 		deck[3] = "n7";
 		
-		deck[4] = "t8";
-		deck[5] = "c8";
-		deck[6] = "r8";
-		deck[7] = "n8";
+		deck[4] = "ta";
+		deck[5] = "ca";
+		deck[6] = "ra";
+		deck[7] = "na";
 		
 		deck[8] = "t9";
 		deck[9] = "c9";
@@ -36,7 +36,7 @@ public class DeckVector {
 		deck[14] = "r10";
 		deck[15] = "n10";
 		
-		deck[16] = "jt";
+		deck[16] = "tj";
 		deck[17] = "cj";
 		deck[18] = "rj";
 		deck[19] = "nj";
@@ -51,10 +51,10 @@ public class DeckVector {
 		deck[26] = "rk";
 		deck[27] = "nk";
 		
-		deck[28] = "ta";
-		deck[29] = "ca";
-		deck[30] = "ra";
-		deck[31] = "na";
+		deck[28] = "t8";
+		deck[29] = "c8";
+		deck[30] = "r8";
+		deck[31] = "n8";
 	}
 	
 	public static void reinitSize(){
@@ -76,7 +76,7 @@ public class DeckVector {
 	    deck[change] = helper;
 	 }
 	 
-	 public String pop(){
+	 public static String pop(){
 		 size--;
 		 return deck[size];
 	 }

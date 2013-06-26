@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.deck.DeckVector;
+import com.example.players.Players;
 import com.example.septica_multiplayer_bluetooth.R;
 
 public class Game extends Activity {
@@ -77,5 +79,139 @@ public class Game extends Activity {
 		playedCard15 = (ImageView) findViewById(R.id.playedcard15);
 		playedCard16 = (ImageView) findViewById(R.id.playedcard16);
 		
+		switch (numberOfPlayers) {
+		case 2:
+			//Shuffle the cards :D
+			DeckVector.init();
+			DeckVector.shuffle();
+			
+			for (int i=0;i<4;i++){
+				Players.addToPlayer1(DeckVector.pop());
+				Players.addToPlayer2(DeckVector.pop());
+			}
+			
+			myCard1.setBackgroundResource(nameToId(Players.player1[0]));
+			myCard2.setBackgroundResource(nameToId(Players.player1[1]));
+			myCard3.setBackgroundResource(nameToId(Players.player1[2]));
+			myCard4.setBackgroundResource(nameToId(Players.player1[3]));
+			myCard1.setVisibility(0);
+			myCard2.setVisibility(0);
+			myCard3.setVisibility(0);
+			myCard4.setVisibility(0);
+			
+			findViewById(R.id.oppositecard1).setVisibility(0);
+			findViewById(R.id.oppositecard2).setVisibility(0);
+			findViewById(R.id.oppositecard3).setVisibility(0);
+			findViewById(R.id.oppositecard4).setVisibility(0);
+			break;
+			
+		case 3:
+			//Shuffle the cards :D
+			DeckVector.init();
+			DeckVector.size = 30;
+			DeckVector.shuffle();
+			
+			for (int i=0;i<4;i++){
+				Players.addToPlayer1(DeckVector.pop());
+				Players.addToPlayer2(DeckVector.pop());
+				Players.addToPlayer3(DeckVector.pop());
+			}
+			
+			myCard1.setBackgroundResource(nameToId(Players.player1[0]));
+			myCard2.setBackgroundResource(nameToId(Players.player1[1]));
+			myCard3.setBackgroundResource(nameToId(Players.player1[2]));
+			myCard4.setBackgroundResource(nameToId(Players.player1[3]));
+			myCard1.setVisibility(0);
+			myCard2.setVisibility(0);
+			myCard3.setVisibility(0);
+			myCard4.setVisibility(0);
+			
+			findViewById(R.id.leftcard1).setVisibility(0);
+			findViewById(R.id.leftcard2).setVisibility(0);
+			findViewById(R.id.leftcard3).setVisibility(0);
+			findViewById(R.id.leftcard4).setVisibility(0);
+			
+			findViewById(R.id.rightcard1).setVisibility(0);
+			findViewById(R.id.rightcard2).setVisibility(0);
+			findViewById(R.id.rightcard3).setVisibility(0);
+			findViewById(R.id.rightcard4).setVisibility(0);
+			break;
+			
+		case 4:
+			//Shuffle the cards :D
+			DeckVector.init();
+			DeckVector.shuffle();
+			
+			for (int i=0;i<4;i++){
+				Players.addToPlayer1(DeckVector.pop());
+				Players.addToPlayer2(DeckVector.pop());
+				Players.addToPlayer3(DeckVector.pop());
+				Players.addToPlayer4(DeckVector.pop());
+			}
+			
+			myCard1.setBackgroundResource(nameToId(Players.player1[0]));
+			myCard2.setBackgroundResource(nameToId(Players.player1[1]));
+			myCard3.setBackgroundResource(nameToId(Players.player1[2]));
+			myCard4.setBackgroundResource(nameToId(Players.player1[3]));
+			myCard1.setVisibility(0);
+			myCard2.setVisibility(0);
+			myCard3.setVisibility(0);
+			myCard4.setVisibility(0);
+			
+			findViewById(R.id.oppositecard1).setVisibility(0);
+			findViewById(R.id.oppositecard2).setVisibility(0);
+			findViewById(R.id.oppositecard3).setVisibility(0);
+			findViewById(R.id.oppositecard4).setVisibility(0);
+			
+			findViewById(R.id.leftcard1).setVisibility(0);
+			findViewById(R.id.leftcard2).setVisibility(0);
+			findViewById(R.id.leftcard3).setVisibility(0);
+			findViewById(R.id.leftcard4).setVisibility(0);
+			
+			findViewById(R.id.rightcard1).setVisibility(0);
+			findViewById(R.id.rightcard2).setVisibility(0);
+			findViewById(R.id.rightcard3).setVisibility(0);
+			findViewById(R.id.rightcard4).setVisibility(0);
+			break;
+
+		default:
+			break;
+		}
+		
+	}
+	
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		myCard1.setVisibility(1);
+		myCard2.setVisibility(1);
+		myCard3.setVisibility(1);
+		myCard4.setVisibility(1);
+		
+		findViewById(R.id.oppositecard1).setVisibility(1);
+		findViewById(R.id.oppositecard2).setVisibility(1);
+		findViewById(R.id.oppositecard3).setVisibility(1);
+		findViewById(R.id.oppositecard4).setVisibility(1);
+		
+		findViewById(R.id.leftcard1).setVisibility(1);
+		findViewById(R.id.leftcard2).setVisibility(1);
+		findViewById(R.id.leftcard3).setVisibility(1);
+		findViewById(R.id.leftcard4).setVisibility(1);
+		
+		findViewById(R.id.rightcard1).setVisibility(1);
+		findViewById(R.id.rightcard2).setVisibility(1);
+		findViewById(R.id.rightcard3).setVisibility(1);
+		findViewById(R.id.rightcard4).setVisibility(1);
+		
+		Players.size1 = 0;
+		Players.size2 = 0;
+		Players.size3 = 0;
+		Players.size4 = 0;
+		
+	}
+	
+	private int nameToId(String name){
+		return getResources().getIdentifier(name, "drawable", getPackageName());
 	}
 }
