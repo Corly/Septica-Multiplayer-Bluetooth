@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background" >
+    
+    <View
+        android:id="@+id/axe"
+    	android:layout_centerHorizontal="true"
+    	android:layout_alignParentBottom="true"
+    	android:layout_width="0dp"
+    	android:layout_height="match_parent"
+    	android:visibility="invisible"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard2"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toLeftOf="@id/axe"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard1"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toLeftOf="@id/mycard2"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard3"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toRightOf="@id/axe"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard4"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toRightOf="@id/mycard3"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard2prim"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+		android:visibility="invisible"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard1prim"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toLeftOf="@id/mycard2prim"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageButton 
+        android:id="@+id/mycard3prim"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toRightOf="@id/mycard2prim"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    
+    
+    <ImageView 
+        android:id="@+id/oppositecard2"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@id/axe"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositecard1"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@id/oppositecard2"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositecard3"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/axe"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositecard4"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/oppositecard3"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositecard2prim"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+		android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositecard1prim"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@id/oppositecard2prim"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositecard3prim"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/oppositecard2prim"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    
+    <View 
+        android:id="@+id/axe2"
+        android:layout_centerVertical="true"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/leftcard2"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/axe2"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+    />
+    
+    <ImageView 
+        android:id="@+id/leftcard1"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/leftcard2"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+    />
+    
+    <ImageView 
+        android:id="@+id/leftcard3"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/axe2"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+    />
+    
+    <ImageView 
+        android:id="@+id/leftcard4"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/leftcard3"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+    />
+
+    <ImageView 
+        android:id="@+id/leftcard2prim"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/leftcard1prim"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/leftcard2prim"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
+    />
+     
+    <ImageView 
+        android:id="@+id/leftcard3prim"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/leftcard2prim"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
+    />
+    
+    
+    <ImageView 
+        android:id="@+id/rightcard2"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/axe2"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+    />
+    
+    <ImageView 
+        android:id="@+id/rightcard1"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/rightcard2"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+    />
+    
+    <ImageView 
+        android:id="@+id/rightcard3"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/axe2"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+    />
+    
+    <ImageView 
+        android:id="@+id/rightcard4"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/rightcard3"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+    />
+
+    <ImageView 
+        android:id="@+id/rightcard2prim"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/rightcard1prim"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_above="@id/rightcard2prim"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
+    />
+     
+    <ImageView 
+        android:id="@+id/rightcard3prim"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/rightcard2prim"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
+    />
+    
+</RelativeLayout>

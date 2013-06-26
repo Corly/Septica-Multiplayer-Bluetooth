@@ -16,45 +16,45 @@ public class DeckVector {
 		*	n = neagra
 		*/
 		
-		deck[0] = "7t";
-		deck[1] = "7c";
-		deck[2] = "7r";
-		deck[3] = "7n";
+		deck[0] = "t7";
+		deck[1] = "c7";
+		deck[2] = "r7";
+		deck[3] = "n7";
 		
-		deck[4] = "8t";
-		deck[5] = "8c";
-		deck[6] = "8r";
-		deck[7] = "8n";
+		deck[4] = "t8";
+		deck[5] = "c8";
+		deck[6] = "r8";
+		deck[7] = "n8";
 		
-		deck[8] = "9t";
-		deck[9] = "9c";
-		deck[10] = "9r";
-		deck[11] = "9n";
+		deck[8] = "t9";
+		deck[9] = "c9";
+		deck[10] = "r9";
+		deck[11] = "n9";
 		
-		deck[12] = "10t";
-		deck[13] = "10c";
-		deck[14] = "10r";
-		deck[15] = "10n";
+		deck[12] = "t10";
+		deck[13] = "c10";
+		deck[14] = "r10";
+		deck[15] = "n10";
 		
-		deck[16] = "Jt";
-		deck[17] = "Jc";
-		deck[18] = "Jr";
-		deck[19] = "Jn";
+		deck[16] = "jt";
+		deck[17] = "cj";
+		deck[18] = "rj";
+		deck[19] = "nj";
 		
-		deck[20] = "Qt";
-		deck[21] = "Qc";
-		deck[22] = "Qr";
-		deck[23] = "Qn";
+		deck[20] = "tq";
+		deck[21] = "cq";
+		deck[22] = "rq";
+		deck[23] = "nq";
 		
-		deck[24] = "Kt";
-		deck[25] = "Kc";
-		deck[26] = "Kr";
-		deck[27] = "Kn";
+		deck[24] = "tk";
+		deck[25] = "ck";
+		deck[26] = "rk";
+		deck[27] = "nk";
 		
-		deck[28] = "At";
-		deck[29] = "Ac";
-		deck[30] = "Ar";
-		deck[31] = "An";
+		deck[28] = "ta";
+		deck[29] = "ca";
+		deck[30] = "ra";
+		deck[31] = "na";
 	}
 	
 	public static void reinitSize(){
