@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background" >
     
+    <!--  View for the vertical middle. -->
     <View
         android:id="@+id/axe"
     	android:layout_centerHorizontal="true"
@@ -20,6 +21,7 @@
         android:layout_toLeftOf="@id/axe"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageButton 
@@ -29,6 +31,7 @@
         android:layout_toLeftOf="@id/mycard2"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageButton 
@@ -38,6 +41,7 @@
         android:layout_toRightOf="@id/axe"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageButton 
@@ -47,6 +51,7 @@
         android:layout_toRightOf="@id/mycard3"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageButton 
@@ -80,7 +85,7 @@
     />
     
     
-    
+    <!-- ImageViews for the cards standing on the other side from player cards. -->
     <ImageView 
         android:id="@+id/oppositecard2"
         android:layout_width="45dp"
@@ -88,6 +93,7 @@
         android:layout_toLeftOf="@id/axe"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -97,6 +103,7 @@
         android:layout_toLeftOf="@id/oppositecard2"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -106,6 +113,7 @@
         android:layout_toRightOf="@id/axe"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -115,6 +123,7 @@
         android:layout_toRightOf="@id/oppositecard3"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -147,7 +156,7 @@
         android:visibility="invisible"
     />
     
-    
+    <!-- Middle horizontal axe.  -->
     <View 
         android:id="@+id/axe2"
         android:layout_centerVertical="true"
@@ -156,6 +165,7 @@
         android:visibility="invisible"
     />
     
+    <!-- Left cards from player point of view. -->
     <ImageView 
         android:id="@+id/leftcard2"
         android:layout_width="60dp"
@@ -163,6 +173,7 @@
         android:layout_above="@id/axe2"
         android:layout_alignParentLeft="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -172,6 +183,7 @@
         android:layout_above="@id/leftcard2"
         android:layout_alignParentLeft="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -181,6 +193,7 @@
         android:layout_below="@id/axe2"
         android:layout_alignParentLeft="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -190,6 +203,7 @@
         android:layout_below="@id/leftcard3"
         android:layout_alignParentLeft="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
 
     <ImageView 
@@ -222,7 +236,7 @@
         android:visibility="invisible"
     />
     
-    
+    <!-- Right cards. -->
     <ImageView 
         android:id="@+id/rightcard2"
         android:layout_width="60dp"
@@ -230,6 +244,7 @@
         android:layout_above="@id/axe2"
         android:layout_alignParentRight="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -239,6 +254,7 @@
         android:layout_above="@id/rightcard2"
         android:layout_alignParentRight="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -248,6 +264,7 @@
         android:layout_below="@id/axe2"
         android:layout_alignParentRight="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
     
     <ImageView 
@@ -257,6 +274,7 @@
         android:layout_below="@id/rightcard3"
         android:layout_alignParentRight="true"
         android:background="@drawable/cardbackflipped"
+        android:visibility="invisible"
     />
 
     <ImageView 
@@ -287,6 +305,182 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/cardbackflipped"
         android:visibility="invisible"
+    />
+    
+    <!-- Cards that are played. -->
+    <ImageView 
+        android:id="@+id/playedcard1"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/ca"
+    	android:layout_alignStart="@id/mycard1"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard2"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/c10"
+    	android:layout_alignStart="@id/mycard1"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard3"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard2"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard4"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard3"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard5"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard4"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard6"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard5"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard7"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard6"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard8"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard7"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard9"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard8"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard10"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard9"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard11"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard10"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard12"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard11"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard13"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard12"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard14"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard13"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard15"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard14"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/playedcard16"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+    	android:background="@drawable/cardback"
+    	android:layout_alignStart="@id/playedcard15"
+    	android:layout_marginStart="12.5dp"   
+    	android:layout_centerVertical="true" 
+    	android:visibility="invisible"
     />
     
 </RelativeLayout>
