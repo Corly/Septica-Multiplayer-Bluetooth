@@ -80,5 +80,14 @@ public class DeckVector {
 		 size--;
 		 return deck[size];
 	 }
+	 
+	 public static int isEmpty(){
+		 if (size == 0){
+			 return 0;
+		 }
+		 else {
+			 return 1;
+		 }
+	 }
 
 }

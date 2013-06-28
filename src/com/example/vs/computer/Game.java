@@ -3,15 +3,27 @@ package com.example.vs.computer;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.deck.DeckVector;
+import com.example.game.bot.PlayedCardsTwo;
 import com.example.players.Players;
 import com.example.septica_multiplayer_bluetooth.R;
 
 public class Game extends Activity {
+	
+	private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private GestureDetector gestureDetector;
+    View.OnTouchListener gestureListener;
 	
 	static ImageButton myCard1;
 	static ImageButton myCard2;
@@ -41,12 +53,24 @@ public class Game extends Activity {
 	Context cnt = this;
 	
 	static int numberOfPlayers;
+	static int playersTurn = 1;
+	static int anyCardPlayed = 0;
+	static int whoIsFirst = 0;
+	static int cardsInHand = 4;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game);
+		
+		//Gesture detector for finishing the hand
+		gestureDetector = new GestureDetector(this, new MyGestureDetector());
+        gestureListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        };
 		
 		numberOfPlayers = getIntent().getIntExtra("numberOfPlayers", 0);
 		
@@ -103,6 +127,27 @@ public class Game extends Activity {
 			findViewById(R.id.oppositecard2).setVisibility(0);
 			findViewById(R.id.oppositecard3).setVisibility(0);
 			findViewById(R.id.oppositecard4).setVisibility(0);
+			
+			
+			//This is a test. Cover your ears! X_x
+			myCard1.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					
+					myCard1.setVisibility(ImageButton.INVISIBLE);
+					playedCard5.setBackgroundResource(nameToId(Players.player1[0]));
+					playedCard5.setVisibility(ImageView.VISIBLE);
+					
+					TranslateAnimation ta = new TranslateAnimation( 0, -dpToPx(30), 0, 0);
+					ta.setDuration(1000);
+					ta.setFillAfter(true);
+					myCard2.startAnimation(ta);
+					myCard3.startAnimation(ta);
+					myCard4.startAnimation(ta);
+				}
+			});
 			break;
 			
 		case 3:
@@ -157,7 +202,7 @@ public class Game extends Activity {
 			myCard2.setVisibility(0);
 			myCard3.setVisibility(0);
 			myCard4.setVisibility(0);
-			
+		    
 			findViewById(R.id.oppositecard1).setVisibility(0);
 			findViewById(R.id.oppositecard2).setVisibility(0);
 			findViewById(R.id.oppositecard3).setVisibility(0);
@@ -211,7 +256,61 @@ public class Game extends Activity {
 		
 	}
 	
-	private int nameToId(String name){
+	public int nameToId(String name){
 		return getResources().getIdentifier(name, "drawable", getPackageName());
 	}
+	
+	public int dpToPx(int dp){
+		return (int) ((dp * getApplicationContext().getResources().getDisplayMetrics().density) + 0.5);
+	}
+	
+	 class MyGestureDetector extends SimpleOnGestureListener {
+	        @Override
+	        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+	            try {
+	                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+	                    return false;
+	                // right to left swipe
+	                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && 
+	                		Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+	                	//finish the hand
+	                	if ( Game.playersTurn == 1 && Game.anyCardPlayed == 1){
+	                		switch (Game.numberOfPlayers){
+	                		case 2:
+	                			Game.whoIsFirst = PlayedCardsTwo.checkWinner();
+	                			PlayedCardsTwo.reset();
+	                			Game.playedCard5.setVisibility(1);
+	                			Game.playedCard6.setVisibility(1);
+	                			Game.playedCard7.setVisibility(1);
+	                			Game.playedCard8.setVisibility(1);
+	                			Game.playedCard9.setVisibility(1);
+	                			Game.playedCard10.setVisibility(1);
+	                			Game.playedCard11.setVisibility(1);
+	                			Game.playedCard12.setVisibility(1);
+	                			//pop a card from the deck and put in the players hand
+	                			break;
+	                			
+	                		case 3:
+	                			
+	                			break;
+	                			
+	                		case 4:
+	                			
+	                			break;
+	                			
+	                		default:
+	                			break;
+	                		}
+	                	}
+	                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && 
+	                		Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+	                    //finish the hand
+	                }
+	            } catch (Exception e) {
+	                // nothing
+	            }
+	            return false;
+	        }
+
+	    }
 }

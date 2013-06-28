@@ -84,6 +84,8 @@
         android:visibility="invisible"
     />
     
+   
+    
     
     <!-- ImageViews for the cards standing on the other side from player cards. -->
     <ImageView 
@@ -313,7 +315,7 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/ca"
-    	android:layout_alignStart="@id/mycard1"   
+    	android:layout_alignLeft="@id/mycard1"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -323,8 +325,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/c10"
-    	android:layout_alignStart="@id/mycard1"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/mycard1"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -334,8 +336,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard2"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard2"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -345,8 +347,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard3"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard3"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -356,8 +358,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard4"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard4"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -367,8 +369,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard5"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard5"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -378,8 +380,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard6"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard6"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -389,8 +391,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard7"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard7"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -400,8 +402,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard8"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard8"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -411,8 +413,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard9"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard9"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -422,8 +424,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard10"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard10"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -433,8 +435,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard11"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard11"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -444,8 +446,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard12"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard12"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -455,8 +457,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard13"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard13"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -466,8 +468,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard14"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard14"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -477,8 +479,8 @@
         android:layout_width="50dp"
         android:layout_height="65dp"
     	android:background="@drawable/cardback"
-    	android:layout_alignStart="@id/playedcard15"
-    	android:layout_marginStart="12.5dp"   
+    	android:layout_alignLeft="@id/playedcard15"
+    	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
