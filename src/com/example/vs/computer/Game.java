@@ -3,14 +3,19 @@ package com.example.vs.computer;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 
 import com.example.deck.DeckVector;
 import com.example.game.bot.PlayedCardsTwo;
@@ -25,38 +30,35 @@ public class Game extends Activity {
     private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
 	
+    //Player's Cards
 	static ImageButton myCard1;
 	static ImageButton myCard2;
 	static ImageButton myCard3;
 	static ImageButton myCard4;
-	static ImageButton myCardAux1;
-	static ImageButton myCardAux2;
-	static ImageButton myCardAux3;
 	
-	static ImageView playedCard1;
-	static ImageView playedCard2;
-	static ImageView playedCard3;
-	static ImageView playedCard4;
-	static ImageView playedCard5;
-	static ImageView playedCard6;
-	static ImageView playedCard7;
-	static ImageView playedCard8;
-	static ImageView playedCard9;
-	static ImageView playedCard10;
-	static ImageView playedCard11;
-	static ImageView playedCard12;
-	static ImageView playedCard13;
-	static ImageView playedCard14;
-	static ImageView playedCard15;
-	static ImageView playedCard16;
+	//An array of ImageViews that holds the "playedCards" that are on the table
+	static ImageView playedCards[] = new ImageView[17];
 	
+	//Context
 	Context cnt = this;
 	
 	static int numberOfPlayers;
-	static int playersTurn = 1;
+	static int playersTurn;
 	static int anyCardPlayed = 0;
 	static int whoIsFirst = 0;
 	static int cardsInHand = 4;
+	static int playedCardPosition;
+	
+	//X Coordinates for player's cards
+	static float XmyCard1;
+	static float XmyCard2;
+	static float XmyCard3;
+	static float XmyCard4;
+	
+	static int reper1;
+	static int reper2;
+	static int reper3;
+	static int reper4;
 	
 	
 	@Override
@@ -74,34 +76,38 @@ public class Game extends Activity {
 		
 		numberOfPlayers = getIntent().getIntExtra("numberOfPlayers", 0);
 		
-		//This variables will be used when the player has 4 or 2 cards remaining
+		//It is player's turn
+		playersTurn = 1;
+		
+		//This variables will be used for the cards.
 		myCard1 = (ImageButton) findViewById(R.id.mycard1);
 		myCard2 = (ImageButton) findViewById(R.id.mycard2);
 		myCard3 = (ImageButton) findViewById(R.id.mycard3);
 		myCard4 = (ImageButton) findViewById(R.id.mycard4);
 		
-		//This variables will be used when the player has 3 or 1 card(s) remaining
-		myCardAux1 = (ImageButton) findViewById(R.id.mycard1prim);
-		myCardAux2 = (ImageButton) findViewById(R.id.mycard2prim);
-		myCardAux3 = (ImageButton) findViewById(R.id.mycard3prim);
-		
 		//Played cards. We will choose which of them will be used according to the number of players
-		playedCard1 = (ImageView) findViewById(R.id.playedcard1);
-		playedCard2 = (ImageView) findViewById(R.id.playedcard2);
-		playedCard3 = (ImageView) findViewById(R.id.playedcard3);
-		playedCard4 = (ImageView) findViewById(R.id.playedcard4);
-		playedCard5 = (ImageView) findViewById(R.id.playedcard5);
-		playedCard6 = (ImageView) findViewById(R.id.playedcard6);
-		playedCard7 = (ImageView) findViewById(R.id.playedcard7);
-		playedCard8 = (ImageView) findViewById(R.id.playedcard8);
-		playedCard9 = (ImageView) findViewById(R.id.playedcard9);
-		playedCard10 = (ImageView) findViewById(R.id.playedcard10);
-		playedCard11 = (ImageView) findViewById(R.id.playedcard11);
-		playedCard12 = (ImageView) findViewById(R.id.playedcard12);
-		playedCard13 = (ImageView) findViewById(R.id.playedcard13);
-		playedCard14 = (ImageView) findViewById(R.id.playedcard14);
-		playedCard15 = (ImageView) findViewById(R.id.playedcard15);
-		playedCard16 = (ImageView) findViewById(R.id.playedcard16);
+		playedCards[1] = (ImageView) findViewById(R.id.playedcard1);
+		playedCards[2] = (ImageView) findViewById(R.id.playedcard2);
+		playedCards[3] = (ImageView) findViewById(R.id.playedcard3);
+		playedCards[4] = (ImageView) findViewById(R.id.playedcard4);
+		playedCards[5] = (ImageView) findViewById(R.id.playedcard5);
+		playedCards[6] = (ImageView) findViewById(R.id.playedcard6);
+		playedCards[7] = (ImageView) findViewById(R.id.playedcard7);
+		playedCards[8] = (ImageView) findViewById(R.id.playedcard8);
+		playedCards[9] = (ImageView) findViewById(R.id.playedcard9);
+		playedCards[10] = (ImageView) findViewById(R.id.playedcard10);
+		playedCards[11] = (ImageView) findViewById(R.id.playedcard11);
+		playedCards[12] = (ImageView) findViewById(R.id.playedcard12);
+		playedCards[13] = (ImageView) findViewById(R.id.playedcard13);
+		playedCards[14] = (ImageView) findViewById(R.id.playedcard14);
+		playedCards[15] = (ImageView) findViewById(R.id.playedcard15);
+		playedCards[16] = (ImageView) findViewById(R.id.playedcard16);
+		
+		//Repers coresponding to position
+		reper1 = 1;
+		reper2 = 3;
+		reper3 = 5;
+		reper4 = 7;
 		
 		switch (numberOfPlayers) {
 		case 2:
@@ -113,6 +119,8 @@ public class Game extends Activity {
 				Players.addToPlayer1(DeckVector.pop());
 				Players.addToPlayer2(DeckVector.pop());
 			}
+			
+			playedCardPosition = 5;
 			
 			myCard1.setBackgroundResource(nameToId(Players.player1[0]));
 			myCard2.setBackgroundResource(nameToId(Players.player1[1]));
@@ -128,26 +136,458 @@ public class Game extends Activity {
 			findViewById(R.id.oppositecard3).setVisibility(0);
 			findViewById(R.id.oppositecard4).setVisibility(0);
 			
+			//X coordinates of the cards
+			XmyCard1 = myCard1.getX();
+			XmyCard2 = myCard2.getX();
+			XmyCard3 = myCard3.getX();
+			XmyCard4 = myCard4.getX();
 			
-			//This is a test. Cover your ears! X_x
 			myCard1.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					
-					myCard1.setVisibility(ImageButton.INVISIBLE);
-					playedCard5.setBackgroundResource(nameToId(Players.player1[0]));
-					playedCard5.setVisibility(ImageView.VISIBLE);
-					
-					TranslateAnimation ta = new TranslateAnimation( 0, -dpToPx(30), 0, 0);
-					ta.setDuration(1000);
-					ta.setFillAfter(true);
-					myCard2.startAnimation(ta);
-					myCard3.startAnimation(ta);
-					myCard4.startAnimation(ta);
+					if ( playersTurn == 1 ){
+						myCard1.clearAnimation();
+						myCard1.setVisibility(ImageButton.INVISIBLE);
+						playersTurn = 0;
+						cardsInHand--;
+
+						playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[0]));
+						playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+						playedCardPosition++;
+
+						if (myCard2.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta2 = new TranslateAnimation(XmyCard2, XmyCard2 - dpToPx(30), 0, 0);
+							ta2.setDuration(1000);
+							ta2.setFillEnabled(true);
+							ta2.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									// TODO Auto-generated method stub
+									XmyCard2 -= dpToPx(30);
+									reper2--;
+									final int id = stringToId("myreper" + "" + reper2);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard2.layout(left, top, right, bottom);
+								}
+							});
+
+							myCard2.startAnimation(ta2);
+						}
+
+						if (myCard3.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta3 = new TranslateAnimation( XmyCard3, XmyCard3 - dpToPx(30), 0, 0);
+							ta3.setDuration(1000);
+							ta3.setFillEnabled(true);
+							ta3.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									// TODO Auto-generated method stub
+									XmyCard3 -= dpToPx(30);
+									reper3--;
+									final int id = stringToId("myreper" + "" + reper3);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard3.layout(left, top, right , bottom);
+								}
+							});
+
+							myCard3.startAnimation(ta3);
+						}
+
+						if (myCard4.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta4 = new TranslateAnimation( XmyCard4, XmyCard4 - dpToPx(30), 0, 0);
+							ta4.setDuration(1000);
+							ta4.setFillEnabled(true);
+							ta4.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+									// 	TODO Auto-generated method stub
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+									// TODO Auto-generated method stub
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									// TODO Auto-generated method stub
+									XmyCard4 -= dpToPx(30);
+									reper4--;
+									final int id = stringToId("myreper" + "" + reper4);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard4.layout(left, top, right , bottom);
+								}
+							});
+
+							myCard4.startAnimation(ta4);
+						}
+					}
 				}
 			});
+			
+			myCard2.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					myCard2.setVisibility(ImageButton.INVISIBLE);
+			
+					playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[1]));
+					playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+					playedCardPosition++;
+					
+					
+						
+					if (myCard1.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
+						ta1.setDuration(1000);
+						ta1.setFillEnabled(true);
+						ta1.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard1 += dpToPx(30);
+								reper1++;
+								final int id = stringToId("myreper" + "" + reper1);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard1.layout(left, top, right , bottom);
+							}
+						});
+						myCard1.startAnimation(ta1);
+					}
+					
+					if (myCard3.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta3 = new TranslateAnimation( XmyCard3 , XmyCard3 -dpToPx(30), 0, 0);
+						ta3.setDuration(1000);
+						ta3.setFillEnabled(true);
+						ta3.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard3 -= dpToPx(30);
+								reper3--;
+								final int id = stringToId("myreper" + "" + reper3);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard3.layout(left, top, right , bottom);	
+							}
+						});
+						myCard3.startAnimation(ta3);
+					}
+					
+					if (myCard4.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta4 = new TranslateAnimation( XmyCard4 , XmyCard4 - dpToPx(30), 0, 0);
+						ta4.setDuration(1000);
+						ta4.setFillEnabled(true);
+						ta4.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard4 -= dpToPx(30);
+								reper4--;
+								final int id = stringToId("myreper" + "" + reper4);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard4.layout(left, top, right , bottom);	
+							}
+						});
+						myCard4.startAnimation(ta4);
+					}
+
+				}
+			});
+			
+			myCard3.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					
+					myCard3.setVisibility(ImageButton.INVISIBLE);
+					
+					playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[2]));
+					playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+					playedCardPosition++;
+					
+					if (myCard1.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
+						ta1.setDuration(1000);
+						ta1.setFillEnabled(true);
+						ta1.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard1 += dpToPx(30);
+								reper1++;
+								final int id = stringToId("myreper" + "" + reper1);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard1.layout(left, top, right , bottom);
+							}
+						});
+						myCard1.startAnimation(ta1);
+					}
+					
+					if (myCard2.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta2 = new TranslateAnimation( XmyCard2, XmyCard2 + dpToPx(30), 0, 0);
+						ta2.setDuration(1000);
+						ta2.setFillEnabled(true);
+						ta2.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard2 += dpToPx(30);
+								reper2++;
+								Log.d("TAG", "" + reper2);
+								final int id = stringToId("myreper" + "" + reper2);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard2.layout(left, top, right , bottom);
+							}
+						});
+						myCard2.startAnimation(ta2);
+					}
+					
+					if (myCard4.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta4 = new TranslateAnimation( XmyCard4, XmyCard4 - dpToPx(30), 0, 0);
+						ta4.setDuration(1000);
+						ta4.setFillEnabled(true);
+						ta4.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard4 -= dpToPx(30);
+								reper4--;
+								final int id = stringToId("myreper" + "" + reper4);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard4.layout(left, top, right , bottom);	
+							}
+						});
+						myCard4.startAnimation(ta4);
+					}
+				}
+			});
+			
+			myCard4.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					myCard4.setVisibility(ImageButton.INVISIBLE);
+					
+					playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[3]));
+					playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+					playedCardPosition++;
+					
+					if (myCard3.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta3 = new TranslateAnimation( XmyCard3, XmyCard3 + dpToPx(30), 0, 0);
+						ta3.setDuration(1000);
+						ta3.setFillEnabled(true);
+						ta3.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard3 += dpToPx(30);
+								reper3++;
+								final int id = stringToId("myreper" + "" + reper3);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard3.layout(left, top, right , bottom);	
+							}
+						});
+						myCard3.startAnimation(ta3);
+					}
+					
+					if (myCard2.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta2 = new TranslateAnimation( XmyCard2, XmyCard2 + dpToPx(30), 0, 0);
+						ta2.setDuration(1000);
+						ta2.setFillEnabled(true);
+						ta2.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard2 += dpToPx(30);
+								reper2++;
+								final int id = stringToId("myreper" + "" + reper2);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard2.layout(left, top, right , bottom);
+							}
+						});
+						myCard2.startAnimation(ta2);
+					}
+					
+					if (myCard1.getVisibility() == ImageButton.VISIBLE){
+						TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
+						ta1.setDuration(1000);
+						ta1.setFillEnabled(true);
+						ta1.setAnimationListener(new AnimationListener() {
+							
+							@Override
+							public void onAnimationStart(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationRepeat(Animation animation) {
+								// TODO Auto-generated method stub
+							}
+							
+							@Override
+							public void onAnimationEnd(Animation animation) {
+								// TODO Auto-generated method stub
+								XmyCard1 += dpToPx(30);
+								reper1++;
+								final int id = stringToId("myreper" + "" + reper1);
+								final int left = findViewById(id).getLeft();
+								final int right = findViewById(id).getRight();
+								final int top = findViewById(id).getTop();
+								final int bottom = findViewById(id).getBottom();
+								myCard1.layout(left, top, right , bottom);
+							}
+						});
+						myCard1.startAnimation(ta1);
+					}
+				}
+			});
+
 			break;
 			
 		case 3:
@@ -260,6 +700,10 @@ public class Game extends Activity {
 		return getResources().getIdentifier(name, "drawable", getPackageName());
 	}
 	
+	public int stringToId(String str){
+		return getResources().getIdentifier(str , "id", getPackageName());
+	}
+	
 	public int dpToPx(int dp){
 		return (int) ((dp * getApplicationContext().getResources().getDisplayMetrics().density) + 0.5);
 	}
@@ -279,14 +723,15 @@ public class Game extends Activity {
 	                		case 2:
 	                			Game.whoIsFirst = PlayedCardsTwo.checkWinner();
 	                			PlayedCardsTwo.reset();
-	                			Game.playedCard5.setVisibility(1);
+	                			//use the vector now
+	                			/*Game.playedCard5.setVisibility(1);
 	                			Game.playedCard6.setVisibility(1);
 	                			Game.playedCard7.setVisibility(1);
 	                			Game.playedCard8.setVisibility(1);
 	                			Game.playedCard9.setVisibility(1);
 	                			Game.playedCard10.setVisibility(1);
 	                			Game.playedCard11.setVisibility(1);
-	                			Game.playedCard12.setVisibility(1);
+	                			Game.playedCard12.setVisibility(1);*/
 	                			//pop a card from the deck and put in the players hand
 	                			break;
 	                			

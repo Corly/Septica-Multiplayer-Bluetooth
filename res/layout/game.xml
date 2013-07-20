@@ -54,8 +54,49 @@
         android:visibility="invisible"
     />
     
+    <!-- Repers for translation. -->
     <ImageButton 
-        android:id="@+id/mycard2prim"
+        android:id="@+id/myreper3"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toLeftOf="@id/axe"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageButton 
+        android:id="@+id/myreper1"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toLeftOf="@id/myreper3"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageButton 
+        android:id="@+id/myreper5"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toRightOf="@id/axe"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageButton 
+        android:id="@+id/myreper7"
+        android:layout_width="60dp"
+        android:layout_height="75dp"
+        android:layout_toRightOf="@id/myreper5"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageButton
+        android:id="@+id/myreper4"
         android:layout_width="60dp"
         android:layout_height="75dp"
         android:layout_centerHorizontal="true"
@@ -65,20 +106,20 @@
     />
     
     <ImageButton 
-        android:id="@+id/mycard1prim"
+        android:id="@+id/myreper2"
         android:layout_width="60dp"
         android:layout_height="75dp"
-        android:layout_toLeftOf="@id/mycard2prim"
+        android:layout_toLeftOf="@id/myreper4"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
         android:visibility="invisible"
     />
     
     <ImageButton 
-        android:id="@+id/mycard3prim"
+        android:id="@+id/myreper6"
         android:layout_width="60dp"
         android:layout_height="75dp"
-        android:layout_toRightOf="@id/mycard2prim"
+        android:layout_toRightOf="@id/myreper4"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
         android:visibility="invisible"
