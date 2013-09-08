@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background" >
@@ -62,7 +63,7 @@
         android:layout_toLeftOf="@id/axe"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
-        android:visibility="invisible"
+      	android:visibility="invisible"
     />
     
     <ImageButton 
@@ -72,7 +73,7 @@
         android:layout_toLeftOf="@id/myreper3"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
-        android:visibility="invisible"
+  		android:visibility="invisible"
     />
     
     <ImageButton 
@@ -92,7 +93,7 @@
         android:layout_toRightOf="@id/myreper5"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
-        android:visibility="invisible"
+		android:visibility="invisible"
     />
     
     <ImageButton
@@ -112,7 +113,7 @@
         android:layout_toLeftOf="@id/myreper4"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
-        android:visibility="invisible"
+		android:visibility="invisible"
     />
     
     <ImageButton 
@@ -122,7 +123,7 @@
         android:layout_toRightOf="@id/myreper4"
         android:layout_alignParentBottom="true"
         android:background="@drawable/cardback"
-        android:visibility="invisible"
+     	android:visibility="invisible"
     />
     
    
@@ -170,7 +171,7 @@
     />
     
     <ImageView 
-        android:id="@+id/oppositecard2prim"
+        android:id="@+id/oppositereper4"
         android:layout_width="45dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
@@ -180,20 +181,60 @@
     />
     
     <ImageView 
-        android:id="@+id/oppositecard1prim"
+        android:id="@+id/oppositereper2"
         android:layout_width="45dp"
         android:layout_height="60dp"
-        android:layout_toLeftOf="@id/oppositecard2prim"
+        android:layout_toLeftOf="@id/oppositereper4"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
         android:visibility="invisible"
     />
     
     <ImageView 
-        android:id="@+id/oppositecard3prim"
+        android:id="@+id/oppositereper6"
         android:layout_width="45dp"
         android:layout_height="60dp"
-        android:layout_toRightOf="@id/oppositecard2prim"
+        android:layout_toRightOf="@id/oppositereper4"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositereper3"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/axe"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositereper5"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/axe"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositereper1"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toLeftOf="@id/oppositereper3"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/cardback"
+        android:visibility="invisible"
+    />
+    
+    <ImageView 
+        android:id="@+id/oppositereper7"
+        android:layout_width="45dp"
+        android:layout_height="60dp"
+        android:layout_toRightOf="@id/oppositereper5"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
         android:visibility="invisible"
@@ -524,6 +565,15 @@
     	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
+    />
+    
+    <Button 
+        android:id="@+id/button_done"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Done"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
     />
     
 </RelativeLayout>

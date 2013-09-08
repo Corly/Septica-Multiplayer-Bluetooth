@@ -26,5 +26,36 @@ public class Players {
 	public static void addToPlayer4(String arg1) {
 		player4[size4++] = arg1;
 	}
+	
+	public static boolean checkSizes(int numberOfPlayers){
+		switch (numberOfPlayers){
+		case 2:
+			if ( size1 == size2){
+				return true;
+			}
+			else {
+				return false;
+			}
+		
+		case 3:
+			if ( size1 == size2 && size1 == size3){
+				return true;
+			}
+			else{
+				return false;
+			}
+			
+		case 4:
+			if ( size1 == size2 && size1 == size3 && size1 == size4){
+				return true;
+			}
+			else {
+				return false;
+			}
+		
+		default:
+			return false;
+		}
+	}
 		
 }
