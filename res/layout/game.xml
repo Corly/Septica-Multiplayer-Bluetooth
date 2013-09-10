@@ -126,8 +126,6 @@
      	android:visibility="invisible"
     />
     
-   
-    
     
     <!-- ImageViews for the cards standing on the other side from player cards. -->
     <ImageView 
@@ -140,7 +138,7 @@
         android:visibility="invisible"
     />
     
-    <ImageView 
+    <ImageButton 
         android:id="@+id/oppositecard1"
         android:layout_width="45dp"
         android:layout_height="60dp"
@@ -204,7 +202,7 @@
         android:id="@+id/oppositereper3"
         android:layout_width="45dp"
         android:layout_height="60dp"
-        android:layout_toRightOf="@id/axe"
+        android:layout_toLeftOf="@id/axe"
         android:layout_alignParentTop="true"
         android:background="@drawable/cardback"
         android:visibility="invisible"
@@ -396,8 +394,8 @@
         android:id="@+id/playedcard1"
         android:layout_width="50dp"
         android:layout_height="65dp"
-    	android:background="@drawable/ca"
-    	android:layout_alignLeft="@id/mycard1"   
+    	android:background="@drawable/cardback"
+    	android:layout_alignLeft="@id/myreper1"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"
     />
@@ -406,8 +404,8 @@
         android:id="@+id/playedcard2"
         android:layout_width="50dp"
         android:layout_height="65dp"
-    	android:background="@drawable/c10"
-    	android:layout_alignLeft="@id/mycard1"
+    	android:background="@drawable/cardback"
+    	android:layout_alignLeft="@id/myreper1"
     	android:layout_marginLeft="12.5dp"   
     	android:layout_centerVertical="true" 
     	android:visibility="invisible"

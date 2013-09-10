@@ -2,6 +2,7 @@ package com.example.vs.computer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -36,8 +37,14 @@ public class Game extends Activity{
 	static ImageButton myCard3;
 	static ImageButton myCard4;
 	
+	//Opposite player's cards
+	static ImageView oppositeCard1;
+	static ImageView oppositeCard2;
+	static ImageView oppositeCard3;
+	static ImageView oppositeCard4;
+	
 	//An array of ImageViews that holds the "playedCards" that are on the table
-	static ImageView playedCards[] = new ImageView[17];
+	static ImageView playedCards[];
 	
 	//Context
 	Context cnt = this;
@@ -49,20 +56,46 @@ public class Game extends Activity{
 	static int cardsInHand;
 	static int playedCardPosition;
 	
-	//X Coordinates for player's cards
+	//X Coordinates for player's cards - relative to their current position I think
 	static float XmyCard1;
 	static float XmyCard2;
 	static float XmyCard3;
 	static float XmyCard4;
 	
+	//X Coordinates for real
+	static float XcoordCard1;
+	static float XcoordCard2;
+	static float XcoordCard3;
+	static float XcoordCard4;
+	
+	//ints to know where a card is placed reported to a reper 
 	static int reper1;
 	static int reper2;
 	static int reper3;
 	static int reper4;
 	
+	//X Coordinates for opposite player's cards
+	static float XopCard1;
+	static float XopCard2;
+	static float XopCard3;
+	static float XopCard4;
+	
+	//ints to know where a card is placed reported to a reper - opposite
+	static int opReper1;
+	static int opReper2;
+	static int opReper3;
+	static int opReper4;
+	
 	//Boolean to see if one of the animation is finished or not
 	private boolean finishAnimation;
 	
+	//Boolean to continue the bot Thread
+	private boolean keepGoing;
+	
+	//Thread for the bot
+	private BotPlay botPlay;
+	
+	private Handler handler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +109,15 @@ public class Game extends Activity{
                 return gestureDetector.onTouchEvent(event);
             }
         };
+        
+        handler = new Handler();
+        
+        //played cards array of imageviews
+        playedCards = new ImageView[17];
+        
+        keepGoing = true;
+        botPlay = new BotPlay();
+        botPlay.start();
         
         //Button for done
         Button done = (Button) findViewById(R.id.button_done);
@@ -156,6 +198,12 @@ public class Game extends Activity{
 		reper3 = 5;
 		reper4 = 7;
 		
+		//Opposite repers coresponding to position
+		opReper1 = 1;
+		opReper2 = 3;
+		opReper3 = 5;
+		opReper4 = 7;
+		
 		switch (numberOfPlayers) {
 		case 2:
 			//Shuffle the cards :D
@@ -178,10 +226,15 @@ public class Game extends Activity{
 			myCard3.setVisibility(0);
 			myCard4.setVisibility(0);
 			
-			findViewById(R.id.oppositecard1).setVisibility(0);
-			findViewById(R.id.oppositecard2).setVisibility(0);
-			findViewById(R.id.oppositecard3).setVisibility(0);
-			findViewById(R.id.oppositecard4).setVisibility(0);
+			//Opposite player's cards
+			oppositeCard1 = (ImageView) findViewById(R.id.oppositecard1);
+			oppositeCard2 = (ImageView) findViewById(R.id.oppositecard2);
+			oppositeCard3 = (ImageView) findViewById(R.id.oppositecard3);
+			oppositeCard4 = (ImageView) findViewById(R.id.oppositecard4);
+			oppositeCard1.setVisibility(0);
+			oppositeCard2.setVisibility(0);
+			oppositeCard3.setVisibility(0);
+			oppositeCard4.setVisibility(0);
 			
 			//X coordinates of the cards
 			XmyCard1 = myCard1.getX();
@@ -189,20 +242,28 @@ public class Game extends Activity{
 			XmyCard3 = myCard3.getX();
 			XmyCard4 = myCard4.getX();
 			
+			//X coordinates of the opposite cards
+			XopCard1 = oppositeCard1.getX();
+			XopCard2 = oppositeCard2.getX();
+			XopCard3 = oppositeCard3.getX();
+			XopCard4 = oppositeCard4.getX();
+			
 			//If one card is played then the other cards start moving according to the card that was played  
 			myCard1.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
+					//TODO
 					
 					if ( playersTurn == 1 ){
 						myCard1.clearAnimation();
 						myCard1.setVisibility(ImageButton.INVISIBLE);
-						//playersTurn = 2;
+						playersTurn = 2;
 						cardsInHand--;
 						Players.size1--;	
 						anyCardPlayed = 1;
 
+						PlayedCardsTwo.addCard(Players.player1[0]);
 						playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[0]));
 						playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
 						playedCardPosition++;
@@ -232,9 +293,10 @@ public class Game extends Activity{
 									final int top = findViewById(id).getTop();
 									final int bottom = findViewById(id).getBottom();
 									myCard2.layout(left, top, right, bottom);
+									XcoordCard2 = myCard2.getX();
 								}
 							});
-
+							
 							myCard2.startAnimation(ta2);
 						}
 
@@ -262,6 +324,7 @@ public class Game extends Activity{
 									final int top = findViewById(id).getTop();
 									final int bottom = findViewById(id).getBottom();
 									myCard3.layout(left, top, right , bottom);
+									XcoordCard3 = myCard3.getX();
 								}
 							});
 
@@ -292,6 +355,7 @@ public class Game extends Activity{
 									final int top = findViewById(id).getTop();
 									final int bottom = findViewById(id).getBottom();
 									myCard4.layout(left, top, right , bottom);
+									XcoordCard4 = myCard4.getX();
 								}
 							});
 
@@ -302,308 +366,340 @@ public class Game extends Activity{
 			});
 			
 			myCard2.setOnClickListener(new OnClickListener() {
+				//TODO
 				
 				@Override
 				public void onClick(View v) {
-					myCard2.setVisibility(ImageButton.INVISIBLE);
-			
-					playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[1]));
-					playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
-					playedCardPosition++;
-					anyCardPlayed = 1;
-					cardsInHand--;
-					
+					if ( playersTurn == 1 ){
+						myCard2.clearAnimation();
+						myCard2.setVisibility(ImageButton.INVISIBLE);
+						playersTurn = 2;
 						
-					if (myCard1.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
-						ta1.setDuration(1000);
-						ta1.setFillEnabled(true);
-						ta1.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard1 += dpToPx(30);
-								reper1++;
-								final int id = stringToId("myreper" + "" + reper1);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard1.layout(left, top, right , bottom);
-							}
-						});
-						myCard1.startAnimation(ta1);
-					}
-					
-					if (myCard3.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta3 = new TranslateAnimation( XmyCard3 , XmyCard3 -dpToPx(30), 0, 0);
-						ta3.setDuration(1000);
-						ta3.setFillEnabled(true);
-						ta3.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard3 -= dpToPx(30);
-								reper3--;
-								final int id = stringToId("myreper" + "" + reper3);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard3.layout(left, top, right , bottom);	
-							}
-						});
-						myCard3.startAnimation(ta3);
-					}
-					
-					if (myCard4.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta4 = new TranslateAnimation( XmyCard4 , XmyCard4 - dpToPx(30), 0, 0);
-						ta4.setDuration(1000);
-						ta4.setFillEnabled(true);
-						ta4.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard4 -= dpToPx(30);
-								reper4--;
-								final int id = stringToId("myreper" + "" + reper4);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard4.layout(left, top, right , bottom);	
-							}
-						});
-						myCard4.startAnimation(ta4);
-					}
+						PlayedCardsTwo.addCard(Players.player1[1]);
+						playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[1]));
+						playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+						playedCardPosition++;
+						anyCardPlayed = 1;
+						cardsInHand--;
+						Players.size1--;
 
+
+						if (myCard1.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
+							ta1.setDuration(1000);
+							ta1.setFillEnabled(true);
+							ta1.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+									Log.d("DEBUG", myCard1.getLeft() + "," + myCard1.getRight());
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard1 += dpToPx(30);
+									reper1++;
+									final int id = stringToId("myreper" + "" + reper1);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard1.layout(left, top, right , bottom);
+									Log.d("DEBUG", myCard1.getLeft() + "," + myCard1.getRight());
+									XcoordCard1 = myCard1.getX();
+								}
+							});
+							myCard1.startAnimation(ta1);
+						}
+
+						if (myCard3.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta3 = new TranslateAnimation( XmyCard3 , XmyCard3 -dpToPx(30), 0, 0);
+							ta3.setDuration(1000);
+							ta3.setFillEnabled(true);
+							ta3.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard3 -= dpToPx(30);
+									reper3--;
+									final int id = stringToId("myreper" + "" + reper3);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard3.layout(left, top, right , bottom);
+									XcoordCard3 = myCard3.getX();
+								}
+							});
+							myCard3.startAnimation(ta3);
+						}
+
+						if (myCard4.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta4 = new TranslateAnimation( XmyCard4 , XmyCard4 - dpToPx(30), 0, 0);
+							ta4.setDuration(1000);
+							ta4.setFillEnabled(true);
+							ta4.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard4 -= dpToPx(30);
+									reper4--;
+									final int id = stringToId("myreper" + "" + reper4);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard4.layout(left, top, right , bottom);
+									XcoordCard4 = myCard4.getX();
+								}
+							});
+							myCard4.startAnimation(ta4);
+						}
+					}
 				}
 			});
-			
+	
 			myCard3.setOnClickListener(new OnClickListener() {
+				//TODO
 				
 				@Override
 				public void onClick(View v) {
-					
-					myCard3.setVisibility(ImageButton.INVISIBLE);
-					
-					playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[2]));
-					playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
-					playedCardPosition++;
-					anyCardPlayed = 1;
-					cardsInHand--;
-					
-					if (myCard1.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
-						ta1.setDuration(1000);
-						ta1.setFillEnabled(true);
-						ta1.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard1 += dpToPx(30);
-								reper1++;
-								final int id = stringToId("myreper" + "" + reper1);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard1.layout(left, top, right , bottom);
-							}
-						});
-						myCard1.startAnimation(ta1);
-					}
-					
-					if (myCard2.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta2 = new TranslateAnimation( XmyCard2, XmyCard2 + dpToPx(30), 0, 0);
-						ta2.setDuration(1000);
-						ta2.setFillEnabled(true);
-						ta2.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard2 += dpToPx(30);
-								reper2++;
-								Log.d("TAG", "" + reper2);
-								final int id = stringToId("myreper" + "" + reper2);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard2.layout(left, top, right , bottom);
-							}
-						});
-						myCard2.startAnimation(ta2);
-					}
-					
-					if (myCard4.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta4 = new TranslateAnimation( XmyCard4, XmyCard4 - dpToPx(30), 0, 0);
-						ta4.setDuration(1000);
-						ta4.setFillEnabled(true);
-						ta4.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard4 -= dpToPx(30);
-								reper4--;
-								final int id = stringToId("myreper" + "" + reper4);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard4.layout(left, top, right , bottom);	
-							}
-						});
-						myCard4.startAnimation(ta4);
+					if (playersTurn == 1){
+						myCard3.clearAnimation();
+						myCard3.setVisibility(ImageButton.INVISIBLE);
+						playersTurn = 2;
+						
+						PlayedCardsTwo.addCard(Players.player1[2]);
+						playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[2]));
+						playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+						playedCardPosition++;
+						anyCardPlayed = 1;
+						cardsInHand--;
+						Players.size1--;
+
+						if (myCard1.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
+							ta1.setDuration(1000);
+							ta1.setFillEnabled(true);
+							ta1.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+									Log.d("DEBUG", myCard1.getLeft() + "," + myCard1.getRight());
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard1 += dpToPx(30);
+									reper1++;
+									final int id = stringToId("myreper" + "" + reper1);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard1.layout(left, top, right , bottom);
+									XcoordCard1 = myCard1.getX();
+									Log.d("DEBUG", myCard1.getLeft() + "," + myCard1.getRight() + "," + myCard1.getX() + "," + XmyCard1);
+								}
+							});
+							myCard1.startAnimation(ta1);
+						}
+
+						if (myCard2.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta2 = new TranslateAnimation( XmyCard2, XmyCard2 + dpToPx(30), 0, 0);
+							ta2.setDuration(1000);
+							ta2.setFillEnabled(true);
+							ta2.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard2 += dpToPx(30);
+									reper2++;
+									Log.d("TAG", "" + reper2);
+									final int id = stringToId("myreper" + "" + reper2);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard2.layout(left, top, right , bottom);
+									XcoordCard2 = myCard2.getX();
+								}
+							});
+							myCard2.startAnimation(ta2);
+						}
+
+						if (myCard4.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta4 = new TranslateAnimation( XmyCard4, XmyCard4 - dpToPx(30), 0, 0);
+							ta4.setDuration(1000);
+							ta4.setFillEnabled(true);
+							ta4.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard4 -= dpToPx(30);
+									reper4--;
+									final int id = stringToId("myreper" + "" + reper4);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard4.layout(left, top, right , bottom);
+									XcoordCard4 = myCard4.getX();
+								}
+							});
+							myCard4.startAnimation(ta4);
+						}
 					}
 				}
 			});
 			
 			myCard4.setOnClickListener(new OnClickListener() {
+				//TODO
 				
 				@Override
 				public void onClick(View v) {
-					myCard4.setVisibility(ImageButton.INVISIBLE);
-					
-					playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[3]));
-					playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
-					playedCardPosition++;
-					anyCardPlayed = 1;
-					cardsInHand--;
-					
-					if (myCard3.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta3 = new TranslateAnimation( XmyCard3, XmyCard3 + dpToPx(30), 0, 0);
-						ta3.setDuration(1000);
-						ta3.setFillEnabled(true);
-						ta3.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard3 += dpToPx(30);
-								reper3++;
-								final int id = stringToId("myreper" + "" + reper3);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard3.layout(left, top, right , bottom);	
-							}
-						});
-						myCard3.startAnimation(ta3);
-					}
-					
-					if (myCard2.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta2 = new TranslateAnimation( XmyCard2, XmyCard2 + dpToPx(30), 0, 0);
-						ta2.setDuration(1000);
-						ta2.setFillEnabled(true);
-						ta2.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard2 += dpToPx(30);
-								reper2++;
-								final int id = stringToId("myreper" + "" + reper2);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard2.layout(left, top, right , bottom);
-							}
-						});
-						myCard2.startAnimation(ta2);
-					}
-					
-					if (myCard1.getVisibility() == ImageButton.VISIBLE){
-						TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
-						ta1.setDuration(1000);
-						ta1.setFillEnabled(true);
-						ta1.setAnimationListener(new AnimationListener() {
-							
-							@Override
-							public void onAnimationStart(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationRepeat(Animation animation) {
-							}
-							
-							@Override
-							public void onAnimationEnd(Animation animation) {
-								XmyCard1 += dpToPx(30);
-								reper1++;
-								final int id = stringToId("myreper" + "" + reper1);
-								final int left = findViewById(id).getLeft();
-								final int right = findViewById(id).getRight();
-								final int top = findViewById(id).getTop();
-								final int bottom = findViewById(id).getBottom();
-								myCard1.layout(left, top, right , bottom);
-							}
-						});
-						myCard1.startAnimation(ta1);
+					if( playersTurn == 1){
+						myCard4.clearAnimation();
+						myCard4.setVisibility(ImageButton.INVISIBLE);
+						playersTurn = 2;
+						
+						PlayedCardsTwo.addCard(Players.player1[0]);
+						playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player1[3]));
+						playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+						playedCardPosition++;
+						anyCardPlayed = 1;
+						cardsInHand--;
+						Players.size1--;
+
+						if (myCard3.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta3 = new TranslateAnimation( XmyCard3, XmyCard3 + dpToPx(30), 0, 0);
+							ta3.setDuration(1000);
+							ta3.setFillEnabled(true);
+							ta3.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard3 += dpToPx(30);
+									reper3++;
+									final int id = stringToId("myreper" + "" + reper3);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard3.layout(left, top, right , bottom);
+									XcoordCard3 = myCard3.getX();
+								}
+							});
+							myCard3.startAnimation(ta3);
+						}
+
+						if (myCard2.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta2 = new TranslateAnimation( XmyCard2, XmyCard2 + dpToPx(30), 0, 0);
+							ta2.setDuration(1000);
+							ta2.setFillEnabled(true);
+							ta2.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard2 += dpToPx(30);
+									reper2++;
+									final int id = stringToId("myreper" + "" + reper2);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard2.layout(left, top, right , bottom);
+									XcoordCard2 = myCard2.getX();
+								}
+							});
+							myCard2.startAnimation(ta2);
+						}
+
+						if (myCard1.getVisibility() == ImageButton.VISIBLE){
+							TranslateAnimation ta1 = new TranslateAnimation( XmyCard1, XmyCard1 + dpToPx(30), 0, 0);
+							ta1.setDuration(1000);
+							ta1.setFillEnabled(true);
+							ta1.setAnimationListener(new AnimationListener() {
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationRepeat(Animation animation) {
+								}
+
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									XmyCard1 += dpToPx(30);
+									reper1++;
+									final int id = stringToId("myreper" + "" + reper1);
+									final int left = findViewById(id).getLeft();
+									final int right = findViewById(id).getRight();
+									final int top = findViewById(id).getTop();
+									final int bottom = findViewById(id).getBottom();
+									myCard1.layout(left, top, right , bottom);
+									XcoordCard1 = myCard1.getX();
+								}
+							});
+							myCard1.startAnimation(ta1);
+						}
 					}
 				}
 			});
@@ -688,6 +784,13 @@ public class Game extends Activity{
 	@Override
 	protected void onStop() {
 		super.onStop();
+		keepGoing = false;
+		try {
+			botPlay.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		myCard1.setVisibility(1);
 		myCard2.setVisibility(1);
 		myCard3.setVisibility(1);
@@ -715,6 +818,35 @@ public class Game extends Activity{
 		
 	}
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		keepGoing = false;
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		keepGoing = true;
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		keepGoing = true;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		keepGoing = false;
+		try {
+			botPlay.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int nameToId(String name){
 		return getResources().getIdentifier(name, "drawable", getPackageName());
 	}
@@ -723,8 +855,8 @@ public class Game extends Activity{
 		return getResources().getIdentifier(str , "id", getPackageName());
 	}
 	
-	public int dpToPx(int dp){
-		return (int) ((dp * getApplicationContext().getResources().getDisplayMetrics().density) + 0.5);
+	public int dpToPx(double d){
+		return (int) ((d * getApplicationContext().getResources().getDisplayMetrics().density) + 0.5);
 	}
 	
 	public void dealCardsAfterOneHandWasFinished(){
@@ -1032,15 +1164,422 @@ public class Game extends Activity{
 
 			@Override
 			public void run() {
-				while (true){
+				while (keepGoing){
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
 					if ( Game.playersTurn == 2){
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								int cardNumber = pseudoRandom();
+								PlayedCardsTwo.addCard(Players.player2[cardNumber - 1]);
+								
+								playedCards[playedCardPosition].setVisibility(ImageView.VISIBLE);
+								//TODO
+								Log.d("DEBUG", XcoordCard1 + "," + XcoordCard2 + "," + XcoordCard3 + "," + XcoordCard4);
+								myCard2.setVisibility(View.INVISIBLE);
+								playedCards[playedCardPosition].setBackgroundResource(nameToId(Players.player2[cardNumber - 1]));
+								playedCardPosition++;
+								Log.d("DEBUG", XcoordCard1 + "," + XcoordCard2 + "," + XcoordCard3 + "," + XcoordCard4);
+				
+								/*switch (cardNumber){
+								case 1:
+									oppositeCard1.clearAnimation();
+									oppositeCard1.setVisibility(ImageView.INVISIBLE);
+									if (oppositeCard2.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta2;
+										ta2 = new TranslateAnimation(XopCard2, XopCard2 -dpToPx(22.5), 0, 0);
+										ta2.setDuration(1000);
+										ta2.setFillEnabled(true);
+										ta2.setAnimationListener(new AnimationListener() {
+
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard2 -= dpToPx(22.5);
+												opReper2--;
+												final int id = stringToId("oppositereper" + "" + opReper2);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard2.layout(left, top, right, bottom);
+											}
+										});
+
+										oppositeCard2.startAnimation(ta2);
+									}
+
+									if (oppositeCard3.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta3 = new TranslateAnimation( XopCard3, XopCard3 - dpToPx(22.5), 0, 0);
+										ta3.setDuration(1000);
+										ta3.setFillEnabled(true);
+										ta3.setAnimationListener(new AnimationListener() {
+
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard3 -= dpToPx(22.5);
+												opReper3--;
+												final int id = stringToId("oppositereper" + "" + opReper3);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard3.layout(left, top, right , bottom);
+											}
+										});
+
+										oppositeCard3.startAnimation(ta3);
+									}
+
+									if (oppositeCard4.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta4 = new TranslateAnimation( XopCard4, XopCard4 - dpToPx(22.5), 0, 0);
+										ta4.setDuration(1000);
+										ta4.setFillEnabled(true);
+										ta4.setAnimationListener(new AnimationListener() {
+
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard4 -= dpToPx(22.5);
+												opReper4--;
+												final int id = stringToId("oppositereper" + "" + opReper4);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard4.layout(left, top, right , bottom);
+											}
+										});
+
+										oppositeCard4.startAnimation(ta4);
+									}
+									break;
+									
+								case 2:
+									oppositeCard2.clearAnimation();
+									oppositeCard2.setVisibility(ImageView.INVISIBLE);
+									if (oppositeCard1.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta1 = new TranslateAnimation( XopCard1, XopCard1 + dpToPx(22.5), 0, 0);
+										ta1.setDuration(1000);
+										ta1.setFillEnabled(true);
+										ta1.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard1 += dpToPx(22.5);
+												opReper1++;
+												final int id = stringToId("oppositereper" + "" + opReper1);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard1.layout(left, top, right , bottom);
+											}
+										});
+										oppositeCard1.startAnimation(ta1);
+									}
+									
+									if (oppositeCard3.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta3 = new TranslateAnimation( XopCard3 , XopCard3 -dpToPx(22.5), 0, 0);
+										ta3.setDuration(1000);
+										ta3.setFillEnabled(true);
+										ta3.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard3 -= dpToPx(22.5);
+												opReper3--;
+												final int id = stringToId("oppositereper" + "" + opReper3);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard3.layout(left, top, right , bottom);	
+											}
+										});
+										oppositeCard3.startAnimation(ta3);
+									}
+									
+									if (oppositeCard4.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta4 = new TranslateAnimation( XopCard4 , XopCard4 - dpToPx(22.5), 0, 0);
+										ta4.setDuration(1000);
+										ta4.setFillEnabled(true);
+										ta4.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard4 -= dpToPx(22.5);
+												opReper4--;
+												final int id = stringToId("oppositereper" + "" + opReper4);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard4.layout(left, top, right , bottom);	
+											}
+										});
+										oppositeCard4.startAnimation(ta4);
+									}
+									break;
+								
+								case 3:
+									oppositeCard3.clearAnimation();
+									oppositeCard3.setVisibility(ImageView.INVISIBLE);
+									if (oppositeCard1.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta1 = new TranslateAnimation( XopCard1, XopCard1 + dpToPx(22.5), 0, 0);
+										ta1.setDuration(1000);
+										ta1.setFillEnabled(true);
+										ta1.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard1 += dpToPx(22.5);
+												opReper1++;
+												final int id = stringToId("oppositereper" + "" + opReper1);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard1.layout(left, top, right , bottom);
+											}
+										});
+										oppositeCard1.startAnimation(ta1);
+									}
+									
+									if (oppositeCard2.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta2 = new TranslateAnimation( XopCard2, XopCard2 + dpToPx(22.5), 0, 0);
+										ta2.setDuration(1000);
+										ta2.setFillEnabled(true);
+										ta2.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard2 += dpToPx(22.5);
+												opReper2++;
+												Log.d("TAG", "" + opReper2);
+												final int id = stringToId("oppositereper" + "" + opReper2);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard2.layout(left, top, right , bottom);
+											}
+										});
+										oppositeCard2.startAnimation(ta2);
+									}
+									
+									if (oppositeCard4.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta4 = new TranslateAnimation( XopCard4, XopCard4 - dpToPx(22.5), 0, 0);
+										ta4.setDuration(1000);
+										ta4.setFillEnabled(true);
+										ta4.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard4 -= dpToPx(22.5);
+												opReper4--;
+												final int id = stringToId("oppositereper" + "" + opReper4);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard4.layout(left, top, right , bottom);	
+											}
+										});
+										oppositeCard4.startAnimation(ta4);
+									}
+									break;
+								
+								case 4:
+									oppositeCard4.clearAnimation();
+									oppositeCard4.setVisibility(ImageView.INVISIBLE);
+									if (oppositeCard3.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta3 = new TranslateAnimation( XopCard3, XopCard3 + dpToPx(22.5), 0, 0);
+										ta3.setDuration(1000);
+										ta3.setFillEnabled(true);
+										ta3.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard3 += dpToPx(22.5);
+												opReper3++;
+												final int id = stringToId("oppositereper" + "" + opReper3);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard3.layout(left, top, right , bottom);	
+											}
+										});
+										oppositeCard3.startAnimation(ta3);
+									}
+									
+									if (oppositeCard2.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta2 = new TranslateAnimation( XopCard2, XopCard2 + dpToPx(22.5), 0, 0);
+										ta2.setDuration(1000);
+										ta2.setFillEnabled(true);
+										ta2.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard2 += dpToPx(22.5);
+												opReper2++;
+												final int id = stringToId("oppositereper" + "" + opReper2);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard2.layout(left, top, right , bottom);
+											}
+										});
+										oppositeCard2.startAnimation(ta2);
+									}
+									
+									if (oppositeCard1.getVisibility() == ImageButton.VISIBLE){
+										TranslateAnimation ta1 = new TranslateAnimation( XopCard1, XopCard1 + dpToPx(22.5), 0, 0);
+										ta1.setDuration(1000);
+										ta1.setFillEnabled(true);
+										ta1.setAnimationListener(new AnimationListener() {
+											
+											@Override
+											public void onAnimationStart(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationRepeat(Animation animation) {
+											}
+											
+											@Override
+											public void onAnimationEnd(Animation animation) {
+												XopCard1 += dpToPx(22.5);
+												opReper1++;
+												final int id = stringToId("oppositereper" + "" + opReper1);
+												final int left = findViewById(id).getLeft();
+												final int right = findViewById(id).getRight();
+												final int top = findViewById(id).getTop();
+												final int bottom = findViewById(id).getBottom();
+												oppositeCard1.layout(left, top, right , bottom);
+											}
+										});
+										oppositeCard1.startAnimation(ta1);
+									}
+									break;
+									
+								default:
+									break;
+								}*/
+								
+								//Game stuff
+								playersTurn = 1;
+								Players.size2--;
+								anyCardPlayed = 1;
+							}
+						
+						});
 					}
 				}
 			}
 			
 			private int pseudoRandom(){
-				return 1 + (int)(Math.random() * 4);
+				return 1 + (int)(Math.random() * ( Players.size2 + 1 ));
 			}
 		}
+
 }
