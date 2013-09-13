@@ -2,6 +2,8 @@ package com.example.game.Game;
 
 import java.util.ArrayList;
 
+import com.example.players.Players;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -28,15 +30,33 @@ public class GameThread extends Thread
 	
 	/* The table where the cards are */
 	private Table table;
+	
+	//Bot Engine Thread
+	private BotPlay botPlay;
 
 	public GameThread(Context context, SurfaceHolder holder)
 	{
 		mContext = context;
 		mHolder = holder;
+		
+		//initialise botPlay
+		botPlay = new BotPlay();
+		
+		//Shuffle the cards
 		DeckVector.init(context);
 		DeckVector.shuffle();
+		
+		//instantiate players
 		player1 = new Player(1);
 		player2 = new Player(2);
+		
+		//player1's turn
+		player1.setTurn(true);
+		
+		//player2 not turn
+		player2.setTurn(false);
+		
+		//table dimension
 		table = new Table(2);
 		Log.d("Septica", "Cards are now created!");
 	}
@@ -54,6 +74,10 @@ public class GameThread extends Thread
 	{
 		mRunning = true;
 		mPaused = false;
+		
+		//Start botPlay
+		botPlay.start();
+		
 		while (mRunning)
 		{
 			try
@@ -77,6 +101,14 @@ public class GameThread extends Thread
 				break;
 			}
 		}
+		
+		//join the botPlay thread at the end of the game
+		try {
+			botPlay.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		Log.d("Septica", "Game has stopped! ");
 	}
 
@@ -97,15 +129,52 @@ public class GameThread extends Thread
 	
 	public boolean handleTouch(MotionEvent event)
 	{
-		ArrayList<Card> cards = player1.getCards();
-		for (int i = 0;i<cards.size();i++)
-			if (cards.get(i).isTouched(event))
-			{
-				table.addToTable(cards.get(i));
-				cards.remove(i);
-				break;
+		if ( player1.isTurn()){
+			ArrayList<Card> cards = player1.getCards();
+			for (int i = 0;i<cards.size();i++){
+				if (cards.get(i).isTouched(event))
+				{
+					table.addToTable(cards.get(i));
+					cards.remove(i);
+					break;
+				}
 			}
+			player1.setTurn(false);
+			player2.setTurn(true);
+		}
 		return true;
+	}
+	
+	private int pseudoRandom(){
+		return (int)(Math.random() * ( player2.getCards().size() ));
+	}
+	
+	private class BotPlay extends Thread {
+		
+		@Override
+		public void run() {
+			while (mRunning){
+				
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				if (player2.isTurn()){
+					//choose a random card from player's 2 hand
+					int whatCard = pseudoRandom();
+					
+					//change player 2 turn
+					player2.setTurn(false);
+					
+					table.addToTable(player2.getCards().get(whatCard));
+					player2.getCards().remove(whatCard);
+					
+					player1.setTurn(true);
+				}
+			}
+		}
 	}
 
 }

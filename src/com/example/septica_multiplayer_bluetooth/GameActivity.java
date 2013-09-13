@@ -1,8 +1,10 @@
 package com.example.septica_multiplayer_bluetooth;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.WindowManager;
 
 import com.example.game.Game.GameSheet;
 
@@ -14,6 +16,9 @@ public class GameActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+					WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		gameSheet = new GameSheet(this);
 		setContentView(gameSheet);
 	}
