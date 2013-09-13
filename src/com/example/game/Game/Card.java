@@ -16,9 +16,11 @@ public class Card
 	private float mWidth;
 	private float mHeight;
 	private Bitmap mCardImage;
+	private Context mContext;
 
 	public Card(String cardCode, Context context)
 	{
+		mContext = context;
 		mCardImage = BitmapFactory.decodeResource(context.getResources(), context.getResources().getIdentifier(cardCode, "drawable", context.getPackageName()));
 		mColor = cardCode.charAt(0) + "";
 		mNumber = cardCode.substring(1, cardCode.length());
@@ -81,6 +83,8 @@ public class Card
 	public void setWidth(float mWidth)
 	{
 		this.mWidth = mWidth;
+		mCardImage = BitmapFactory.decodeResource(mContext.getResources(),mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
+		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int)mWidth, (int)mHeight, true);		
 	}
 
 	public float getHeight()
@@ -91,5 +95,8 @@ public class Card
 	public void setHeight(float mHeight)
 	{
 		this.mHeight = mHeight;
+		mCardImage = BitmapFactory.decodeResource(mContext.getResources(),mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
+		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int)mWidth, (int)mHeight, true);
+		
 	}
 }
