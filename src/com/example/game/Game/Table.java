@@ -47,6 +47,6 @@ public class Table
 	public void drawCards(Canvas canvas)
 	{
 		for (int i = 0;i<mCount;i++)
-			mCards[mCount - i - 1].draw(canvas);
+			mCards[i].draw(canvas);
 	}
 }

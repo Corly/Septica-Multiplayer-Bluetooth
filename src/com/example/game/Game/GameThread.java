@@ -66,6 +66,7 @@ public class GameThread extends Thread
 						canvas.drawColor(Color.BLACK);
 						player1.drawCards(canvas);
 						player2.drawCards(canvas);
+						table.drawCards(canvas);
 						mHolder.unlockCanvasAndPost(canvas);
 					}
 				}
@@ -101,6 +102,7 @@ public class GameThread extends Thread
 			if (cards.get(i).isTouched(event))
 			{
 				table.addToTable(cards.get(i));
+				cards.remove(i);
 				break;
 			}
 		return true;
