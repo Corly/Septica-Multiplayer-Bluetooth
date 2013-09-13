@@ -39,6 +39,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback
 	{
 		mWidth = width;
 		mHeight = height;
+		mThread.setWH(width, height);
 		Log.d("Septica", "Surface was changed!");
 	}
 
@@ -53,6 +54,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback
 	public void surfaceDestroyed(SurfaceHolder holder)
 	{
 		mThread.stopRunning();
+		mThread = null;
 		Log.d("Septica", "Surface was destroyed!");
 	}
 

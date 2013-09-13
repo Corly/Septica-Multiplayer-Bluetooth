@@ -6,8 +6,14 @@ import android.content.Context;
 
 public abstract class DeckVector
 {
-	public static Card[] deck;
-	public static int size;
+	private static Card[] deck;
+	private static int size;
+	
+	public static Card getCard(int index)
+	{
+		if (index < 32 && index >= 0) return deck[index];
+		else return null;
+	}
 
 	public static void init(Context context)
 	{
@@ -57,6 +63,12 @@ public abstract class DeckVector
 		deck[29] = new Card("c8", context);
 		deck[30] = new Card("r8", context);
 		deck[31] = new Card("n8", context);
+		for (int i = 0;i<size;i++)
+		{
+			deck[i].setHeight(100.0f);
+			deck[i].setWidth(100.0f);
+		}
+			
 	}
 
 	public static void reinitSize()
@@ -68,10 +80,11 @@ public abstract class DeckVector
 	{
 		Random random = new Random();
 		random.nextInt();
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < 10000; i++)
 		{
-			int change = i + random.nextInt(size - i);
-			swap(i, change);
+			int change1 = random.nextInt(size);
+			int change2 = random.nextInt(size);
+			swap(change1, change2);
 		}
 	}
 
