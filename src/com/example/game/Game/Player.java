@@ -3,6 +3,7 @@ package com.example.game.Game;
 import java.util.ArrayList;
 
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 
 public class Player
 {
@@ -83,5 +84,28 @@ public class Player
 	public ArrayList<Card> getCards()
 	{
 		return mCards;
+	}
+	
+	public int checkTouch(MotionEvent event)
+	{
+		for (int i = 0;i<mCards.size();i++)
+		{
+			if (mCards.get(i).isTouched(event))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public Card getCard(int index)
+	{
+		if (index < 4 && index >= 0) 
+		{
+			Card card = mCards.get(index);
+			mCards.remove(index);
+			return card;
+		}
+		else return null;
 	}
 }

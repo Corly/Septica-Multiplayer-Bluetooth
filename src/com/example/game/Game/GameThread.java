@@ -14,52 +14,52 @@ public class GameThread extends Thread
 	/* Holder and Context */
 	private SurfaceHolder mHolder;
 	private Context mContext;
-	
-	/* Running and pausing boolean */	
+
+	/* Running and pausing boolean */
 	private boolean mRunning;
 	private boolean mPaused;
-	
+
 	/* Width and height of the game */
-	private int mHeight , mWidth;
-	
-	/* The two players */	
+	private int mHeight, mWidth;
+
+	/* The two players */
 	private Player player1;
 	private Player player2;
-	
+
 	/* The table where the cards are */
 	private Table table;
-	
-	//Bot Engine Thread
+
+	// Bot Engine Thread
 	private BotPlay botPlay;
 
 	public GameThread(Context context, SurfaceHolder holder)
 	{
 		mContext = context;
 		mHolder = holder;
-		
-		//initialise botPlay
+
+		// initialise botPlay
 		botPlay = new BotPlay();
-		
-		//Shuffle the cards
+
+		// Shuffle the cards
 		DeckVector.init(context);
 		DeckVector.shuffle();
-		
-		//instantiate players
+
+		// instantiate players
 		player1 = new Player(1);
 		player2 = new Player(2);
-		
-		//player1's turn
+
+		// player1's turn
 		player1.setTurn(true);
-		
-		//player2 not turn
+
+		// player2 not turn
 		player2.setTurn(false);
-		
-		//table dimension
+
+		// table dimension
 		table = new Table(2);
 		Log.d("Septica", "Cards are now created!");
 	}
-	
-	public void setWH(int width , int height)
+
+	public void setWH(int width, int height)
 	{
 		mHeight = height;
 		mWidth = width;
@@ -72,10 +72,10 @@ public class GameThread extends Thread
 	{
 		mRunning = true;
 		mPaused = false;
-		
-		//Start botPlay
+
+		// Start botPlay
 		botPlay.start();
-		
+
 		while (mRunning)
 		{
 			try
@@ -99,15 +99,17 @@ public class GameThread extends Thread
 				break;
 			}
 		}
-		
 
-		//join the botPlay thread at the end of the game
-		try {
+		// join the botPlay thread at the end of the game
+		try
+		{
 			botPlay.join();
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e)
+		{
 			e.printStackTrace();
 		}
-		
+
 		Log.d("Septica", "Game has stopped! ");
 
 	}
@@ -126,53 +128,56 @@ public class GameThread extends Thread
 	{
 		mPaused = false;
 	}
-	
+
 	public boolean handleTouch(MotionEvent event)
 	{
 
-		if ( player1.isTurn()){
-			ArrayList<Card> cards = player1.getCards();
-			for (int i = 0;i<cards.size();i++){
-				if (cards.get(i).isTouched(event))
-				{
-					table.addToTable(cards.get(i));
-					cards.remove(i);
-					break;
-				}
+		if (player1.isTurn())
+		{
+			int result = player1.checkTouch(event);
+			if (result != -1)
+			{
+				table.addToTable(player1.getCard(result));
+				player1.setTurn(false);
+				player2.setTurn(true);
 			}
-			player1.setTurn(false);
-			player2.setTurn(true);
-
 		}
 		return true;
 	}
-	
-	private int pseudoRandom(){
-		return (int)(Math.random() * ( player2.getCards().size() ));
+
+	private int pseudoRandom()
+	{
+		return (int) (Math.random() * (player2.getCards().size()));
 	}
-	
-	private class BotPlay extends Thread {
-		
+
+	private class BotPlay extends Thread
+	{
+
 		@Override
-		public void run() {
-			while (mRunning){
-				
-				try {
+		public void run()
+		{
+			while (mRunning)
+			{
+
+				try
+				{
 					Thread.sleep(20);
-				} catch (InterruptedException e) {
+				}
+				catch (InterruptedException e)
+				{
 					e.printStackTrace();
 				}
-				
-				if (player2.isTurn()){
-					//choose a random card from player's 2 hand
-					int whatCard = pseudoRandom();
-					
-					//change player 2 turn
+
+				if (player2.isTurn())
+				{
+					// change player 2 turn
 					player2.setTurn(false);
 					
-					table.addToTable(player2.getCards().get(whatCard));
-					player2.getCards().remove(whatCard);
-					
+					// choose a random card from player's 2 hand
+					int whatCard = pseudoRandom();
+
+					table.addToTable(player2.getCard(whatCard));
+
 					player1.setTurn(true);
 				}
 			}

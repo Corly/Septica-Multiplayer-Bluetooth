@@ -38,7 +38,7 @@ public class Table
 		else
 		{
 			mCards[mCount] = card;
-			card.setCenterX(mCards[mCount - 1].getCenterX() + 10);
+			card.setCenterX(mCards[mCount - 1].getCenterX() + card.getWidth() / 4);
 			card.setCenterY(mGameHeight / 2);
 			mCount++;
 		}
