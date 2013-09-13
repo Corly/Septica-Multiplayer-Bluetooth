@@ -2,7 +2,8 @@ package com.example.deck;
 
 import java.util.Random;
 
-public class DeckVector {
+public class DeckVector 
+{
 	public static String deck[];
 	public static int size;
 	
