@@ -19,6 +19,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback
 		super(context);
 		mContext = context;
 		mHolder = this.getHolder();
+		mHolder.addCallback(this);
 		mThread = new GameThread(context, mHolder);
 		Log.d("Septica", "GameSheet constructor 1");
 	}
@@ -28,6 +29,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback
 		super(context, attrs);
 		mContext = context;
 		mHolder = this.getHolder();
+		mHolder.addCallback(this);
 		mThread = new GameThread(context, mHolder);
 		Log.d("Septica", "GameSheet constructor 2");
 	}
