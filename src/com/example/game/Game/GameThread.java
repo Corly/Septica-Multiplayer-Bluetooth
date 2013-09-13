@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 public class GameThread extends Thread
 {
@@ -137,9 +138,13 @@ public class GameThread extends Thread
 			int result = player1.checkTouch(event);
 			if (result != -1)
 			{
-				table.addToTable(player1.getCard(result));
-				player1.setTurn(false);
-				player2.setTurn(true);
+				if (table.addToTable(player1.getCard(result))){
+					player1.setTurn(false);
+					player2.setTurn(true);
+				}
+				else {
+					Toast.makeText(mContext, "Illegal move", Toast.LENGTH_SHORT).show();
+				}
 			}
 		}
 		return true;
@@ -170,15 +175,14 @@ public class GameThread extends Thread
 
 				if (player2.isTurn())
 				{
-					// change player 2 turn
-					player2.setTurn(false);
-					
 					// choose a random card from player's 2 hand
 					int whatCard = pseudoRandom();
 
-					table.addToTable(player2.getCard(whatCard));
-
-					player1.setTurn(true);
+					if (table.addToTable(player2.getCard(whatCard))){
+						// change player 2 turn
+						player2.setTurn(false);
+						player1.setTurn(true);
+					}
 				}
 			}
 		}
