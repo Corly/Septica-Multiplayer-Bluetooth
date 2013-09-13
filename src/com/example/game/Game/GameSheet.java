@@ -3,6 +3,7 @@ package com.example.game.Game;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -56,6 +57,11 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback
 		mThread.stopRunning();
 		mThread = null;
 		Log.d("Septica", "Surface was destroyed!");
+	}
+	
+	public boolean onTouchEvent(MotionEvent event)
+	{
+		return mThread.handleTouch(event);
 	}
 
 }

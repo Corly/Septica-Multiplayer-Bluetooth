@@ -6,6 +6,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.view.MotionEvent;
 
 public class Card
 {
@@ -96,7 +97,11 @@ public class Card
 	{
 		this.mHeight = mHeight;
 		mCardImage = BitmapFactory.decodeResource(mContext.getResources(),mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
-		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int)mWidth, (int)mHeight, true);
-		
+		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int)mWidth, (int)mHeight, true);		
+	}
+	
+	public boolean isTouched(MotionEvent event)
+	{
+		return (event.getX() < mCenterX + mWidth / 2 && event.getX() > mCenterX - mWidth / 2 && event.getY() < mCenterY + mHeight / 2 && event.getY() > mCenterY - mHeight / 2);
 	}
 }
