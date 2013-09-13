@@ -2,8 +2,6 @@ package com.example.game.Game;
 
 import java.util.ArrayList;
 
-import com.example.players.Players;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -102,6 +100,7 @@ public class GameThread extends Thread
 			}
 		}
 		
+
 		//join the botPlay thread at the end of the game
 		try {
 			botPlay.join();
@@ -110,6 +109,7 @@ public class GameThread extends Thread
 		}
 		
 		Log.d("Septica", "Game has stopped! ");
+
 	}
 
 	public void stopRunning()
@@ -129,6 +129,7 @@ public class GameThread extends Thread
 	
 	public boolean handleTouch(MotionEvent event)
 	{
+
 		if ( player1.isTurn()){
 			ArrayList<Card> cards = player1.getCards();
 			for (int i = 0;i<cards.size();i++){
@@ -141,6 +142,7 @@ public class GameThread extends Thread
 			}
 			player1.setTurn(false);
 			player2.setTurn(true);
+
 		}
 		return true;
 	}
