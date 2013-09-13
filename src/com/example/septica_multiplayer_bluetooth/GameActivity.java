@@ -1,17 +1,21 @@
 package com.example.septica_multiplayer_bluetooth;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
+
+import com.example.game.Game.GameSheet;
 
 public class GameActivity extends Activity
 {
+	GameSheet gameSheet;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_game);
+		gameSheet = new GameSheet(this);
+		setContentView(gameSheet);
 	}
 
 	@Override
