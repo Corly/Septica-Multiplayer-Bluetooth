@@ -77,7 +77,8 @@ public class GameThread extends Thread
 				break;
 			}
 		}
-		Log.d("Septica", "Game has stopped! ");
+		
+		Log.d("Septica", "Game has stopped!");
 	}
 
 	public void stopRunning()
@@ -99,12 +100,14 @@ public class GameThread extends Thread
 	{
 		ArrayList<Card> cards = player1.getCards();
 		for (int i = 0;i<cards.size();i++)
+		{
 			if (cards.get(i).isTouched(event))
 			{
 				table.addToTable(cards.get(i));
 				cards.remove(i);
 				break;
 			}
+		}
 		return true;
 	}
 
