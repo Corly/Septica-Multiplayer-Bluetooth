@@ -11,6 +11,7 @@ public class Player
 	private boolean mStarted;
 	private boolean mIsTurn;
 	private int mPlayerIndex;
+	private int mNumberOfPoints;
 	
 	public Player(int playerindex)
 	{
@@ -113,4 +114,17 @@ public class Player
 			mCards.remove(index);
 		}
 	}
+	
+	public int getNumberOfPoints() {
+		return mNumberOfPoints;
+	}
+	
+	public void setNumberOfPoints(int mNumberOfPoints) {
+		this.mNumberOfPoints = mNumberOfPoints;
+	}
+	
+	public int getPlayerIndex() {
+		return mPlayerIndex;
+	}
+
 }

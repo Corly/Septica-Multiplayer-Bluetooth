@@ -69,5 +69,34 @@ public class Table
 		for (int i = 0;i<mCount;i++)
 			mCards[i].draw(canvas);
 	}
-
+	
+	
+	//returns an object that was 2 fields: handWinner and numberOfPoints
+	public HandWinner checkHandWinner(int whichPlayerWasFirst){
+		String firstCardName = mCards[0].getNumber();
+		//maybe this variable will be global at some point.
+		//for now is local
+		int numberOfPlayers = 2;
+		int whatCardWon = 0;
+		int numberOfPoints = 0;
+		
+		for (int i=mCount - 1; i>=0; i--){
+			if ( mCards[i].getNumber().contentEquals(firstCardName) ||
+					mCards[i].getNumber().contentEquals("7") ){
+				whatCardWon = i;
+				break;
+			}
+		}
+		
+		for (int i=0; i<mCount; i++){
+			if (mCards[i].getNumber().contentEquals("a") ||
+					mCards[i].getNumber().contentEquals("10")){
+				numberOfPoints++;
+			}
+		}
+		
+		return new HandWinner((whichPlayerWasFirst + whatCardWon % numberOfPlayers) % numberOfPlayers ,
+				numberOfPoints);
+	}
+	
 }
