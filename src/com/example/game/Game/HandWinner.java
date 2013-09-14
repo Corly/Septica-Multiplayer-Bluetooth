@@ -1,27 +1,33 @@
 package com.example.game.Game;
 
-public class HandWinner {
+public class HandWinner
+{
 	private int handWinner;
 	private int numberOfPointsWon;
-	
-	public HandWinner(int handWinner, int numberOfPlayers){
+
+	public HandWinner(int handWinner, int numberOfPlayers)
+	{
 		this.handWinner = handWinner;
 		this.numberOfPointsWon = numberOfPlayers;
 	}
-	
-	public int getHandWinner() {
+
+	public int getHandWinner()
+	{
 		return handWinner;
 	}
-	
-	public int getNumberOfPointsWon() {
+
+	public int getNumberOfPointsWon()
+	{
 		return numberOfPointsWon;
 	}
-	
-	public void setHandWinner(int handWinner) {
+
+	public void setHandWinner(int handWinner)
+	{
 		this.handWinner = handWinner;
 	}
-	
-	public void setNumberOfPointsWon(int numberOfPointsWon) {
+
+	public void setNumberOfPointsWon(int numberOfPointsWon)
+	{
 		this.numberOfPointsWon = numberOfPointsWon;
 	}
 

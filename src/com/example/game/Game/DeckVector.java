@@ -8,10 +8,11 @@ public abstract class DeckVector
 {
 	private static Card[] deck;
 	private static int size;
-	
+
 	public static Card getCard(int index)
 	{
-		if (index < 32 && index >= 0) return deck[index];
+		if (index < 32 && index >= 0)
+			return deck[index];
 		else return null;
 	}
 
@@ -63,12 +64,12 @@ public abstract class DeckVector
 		deck[29] = new Card("c8", context);
 		deck[30] = new Card("r8", context);
 		deck[31] = new Card("n8", context);
-		for (int i = 0;i<size;i++)
+		for (int i = 0; i < size; i++)
 		{
-			deck[i].setHeight(100.0f);
+			deck[i].setHeight(130.0f);
 			deck[i].setWidth(100.0f);
 		}
-			
+
 	}
 
 	public static void reinitSize()

@@ -1,7 +1,5 @@
 package com.example.game.Game;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -32,10 +30,10 @@ public class GameThread extends Thread
 
 	// Bot Engine Thread
 	private BotPlay botPlay;
-	
-	//Which player was first
+
+	// Which player was first
 	private int whichPlayerWasFirst;
-	
+
 	public GameThread(Context context, SurfaceHolder holder)
 	{
 		mContext = context;
@@ -51,7 +49,7 @@ public class GameThread extends Thread
 		// instantiate players
 		player1 = new Player(1);
 		player2 = new Player(2);
-		
+
 		// player1's turn
 		player1.setTurn(true);
 		whichPlayerWasFirst = 1;
@@ -142,77 +140,92 @@ public class GameThread extends Thread
 			int result = player1.checkTouch(event);
 			if (result != -1)
 			{
-				if (table.addToTable(player1.getCard(result))){
+				if (table.addToTable(player1.getCard(result)))
+				{
 					player1.removeCard(result);
 					player1.setTurn(false);
 					player2.setTurn(true);
 				}
-				else {
+				else
+				{
 					Toast.makeText(mContext, "Illegal move", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
 		return true;
 	}
-	
-	public void finishHand(int whichPlayerWantsToFinishHand){
+
+	public void finishHand(int whichPlayerWantsToFinishHand)
+	{
 		Log.d("Septica", whichPlayerWantsToFinishHand + "," + whichPlayerWasFirst);
-		if (whichPlayerWantsToFinishHand == whichPlayerWasFirst){
+		if (whichPlayerWantsToFinishHand == whichPlayerWasFirst)
+		{
 			player1.setTurn(false);
 			player2.setTurn(false);
 			HandWinner winner = table.checkHandWinner(whichPlayerWasFirst);
 			whichPlayerWasFirst = winner.getHandWinner();
 
-			//boolean for knowing if the game is finished
+			// boolean for knowing if the game is finished
 			boolean gameDone = false;
 
-			//firstly we have to deal the cards if it is possible
-			if (DeckVector.isEmpty() && player1.getCards().size() == 0){
+			// firstly we have to deal the cards if it is possible
+			if (DeckVector.isEmpty() && player1.getCards().size() == 0)
+			{
 				gameDone = true;
 			}
-			else {
+			else
+			{
 				dealCards(winner.getHandWinner());
 			}
 
-			//set the player that won to start the hand
-			//just for 2 players
-			if (winner.getHandWinner() == 1){
+			// set the player that won to start the hand
+			// just for 2 players
+			if (winner.getHandWinner() == 1)
+			{
 				player1.setNumberOfPoints(player1.getNumberOfPoints() + winner.getNumberOfPointsWon());
 			}
-			else {
+			else
+			{
 				player2.setNumberOfPoints(player2.getNumberOfPoints() + winner.getNumberOfPointsWon());
 			}
 
-			if (gameDone){
+			if (gameDone)
+			{
 				Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
 			}
-			else{
-				if (winner.getHandWinner() == 1){
+			else
+			{
+				if (winner.getHandWinner() == 1)
+				{
 					player1.setTurn(true);
 				}
-				else {
+				else
+				{
 					player2.setTurn(true);
 				}
 			}
 		}
 	}
-	
-	//just for 2 players
-	private void dealCards(int whichPlayerHasWon){
-		if (whichPlayerHasWon == 1){
-			while( !DeckVector.isEmpty() && player2.getCards().size() <= 3){
-				player1.getCards().add(DeckVector.pop());
-				player2.getCards().add(DeckVector.pop());
+
+	// just for 2 players
+	private void dealCards(int whichPlayerHasWon)
+	{
+		if (whichPlayerHasWon == 1)
+		{
+			while (!DeckVector.isEmpty() && player2.getCards().size() <= 3)
+			{
+				player1.addCard(DeckVector.pop());
+				player2.addCard(DeckVector.pop());
 			}
 		}
-		else {
-			while( !DeckVector.isEmpty() && player1.getCards().size() <= 3){
-				player2.getCards().add(DeckVector.pop());
-				player1.getCards().add(DeckVector.pop());
+		else
+		{
+			while (!DeckVector.isEmpty() && player1.getCards().size() <= 3)
+			{
+				player2.addCard(DeckVector.pop());
+				player1.addCard(DeckVector.pop());
 			}
 		}
-		player1.setupCards(mWidth, mHeight);
-		player2.setupCards(mWidth, mHeight);
 	}
 
 	private int pseudoRandom()
@@ -244,14 +257,17 @@ public class GameThread extends Thread
 					int whatCard = pseudoRandom();
 					Log.d("Septica", whatCard + "");
 
-					if (table.addToTable(player2.getCard(whatCard))){
+					if (table.addToTable(player2.getCard(whatCard)))
+					{
 						player2.removeCard(whatCard);
 						// change player 2 turn
 						player2.setTurn(false);
 						player1.setTurn(true);
 					}
-					else {
-						if (whatCard == 0){
+					else
+					{
+						if (whatCard == 0)
+						{
 							player1.setTurn(false);
 							player2.setTurn(false);
 							finishHand(2);

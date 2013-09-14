@@ -2,10 +2,8 @@ package com.example.game.Game;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
 public class Card
@@ -84,8 +82,8 @@ public class Card
 	public void setWidth(float mWidth)
 	{
 		this.mWidth = mWidth;
-		mCardImage = BitmapFactory.decodeResource(mContext.getResources(),mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
-		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int)mWidth, (int)mHeight, true);		
+		mCardImage = BitmapFactory.decodeResource(mContext.getResources(), mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
+		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int) mWidth, (int) mHeight, true);
 	}
 
 	public float getHeight()
@@ -96,10 +94,10 @@ public class Card
 	public void setHeight(float mHeight)
 	{
 		this.mHeight = mHeight;
-		mCardImage = BitmapFactory.decodeResource(mContext.getResources(),mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
-		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int)mWidth, (int)mHeight, true);		
+		mCardImage = BitmapFactory.decodeResource(mContext.getResources(), mContext.getResources().getIdentifier(mColor + mNumber, "drawable", mContext.getPackageName()));
+		mCardImage = Bitmap.createScaledBitmap(mCardImage, (int) mWidth, (int) mHeight, true);
 	}
-	
+
 	public boolean isTouched(MotionEvent event)
 	{
 		return (event.getX() < mCenterX + mWidth / 2 && event.getX() > mCenterX - mWidth / 2 && event.getY() < mCenterY + mHeight / 2 && event.getY() > mCenterY - mHeight / 2);

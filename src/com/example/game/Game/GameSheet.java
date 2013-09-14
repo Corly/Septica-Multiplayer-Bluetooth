@@ -11,14 +11,14 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class GameSheet extends SurfaceView implements SurfaceHolder.Callback, OnTouchListener
+public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , OnTouchListener
 {
 	private SurfaceHolder mHolder;
 	private Context mContext;
 	private int mWidth;
 	private int mHeight;
 	private GameThread mThread;
-	private final GestureDetector gestureDetector;
+	private final GestureDetector mGestureDetector;
 
 	public GameSheet(Context context)
 	{
@@ -27,7 +27,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback, On
 		mHolder = this.getHolder();
 		mHolder.addCallback(this);
 		mThread = new GameThread(context, mHolder);
-		gestureDetector = new GestureDetector(mContext, new GestureListener());
+		mGestureDetector = new GestureDetector(mContext, new GestureListener());
 		setOnTouchListener(this);
 		Log.d("Septica", "GameSheet constructor 1");
 	}
@@ -39,7 +39,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback, On
 		mHolder = this.getHolder();
 		mHolder.addCallback(this);
 		mThread = new GameThread(context, mHolder);
-		gestureDetector = new GestureDetector(mContext, new GestureListener());
+		mGestureDetector = new GestureDetector(mContext, new GestureListener());
 		setOnTouchListener(this);
 		Log.d("Septica", "GameSheet constructor 2");
 	}
@@ -67,54 +67,68 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback, On
 		mThread = null;
 		Log.d("Septica", "Surface was destroyed!");
 	}
-	
+
 	public boolean onTouchEvent(MotionEvent event)
 	{
 		return mThread.handleTouch(event);
 	}
 
 	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		return gestureDetector.onTouchEvent(event);
+	public boolean onTouch(View v, MotionEvent event)
+	{
+		return mGestureDetector.onTouchEvent(event);
 	}
-	
-	private final class GestureListener extends SimpleOnGestureListener {
 
-        private static final int SWIPE_THRESHOLD = 100;
-        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+	private final class GestureListener extends SimpleOnGestureListener
+	{
 
-        @Override
-        public boolean onDown(MotionEvent e) {
-        	Log.d("Septica", "Down");
-            return true;
-        }
+		private static final int SWIPE_THRESHOLD = 100;
+		private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            boolean result = false;
-            try {
-                float diffY = e2.getY() - e1.getY();
-                float diffX = e2.getX() - e1.getX();
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    	Log.d("Septica", "Finished and Swiped");
-                    	mThread.finishHand(1);
-                    }
-                } else {
-                    if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) {
-                        	//swipe bottom
-                        } else {
-                            //swipe top
-                        }
-                    }
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-            return result;
-        }
-    }
+		@Override
+		public boolean onDown(MotionEvent e)
+		{
+			Log.d("Septica", "Down");
+			return true;
+		}
 
+		@Override
+		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+		{
+			boolean result = false;
+			try
+			{
+				float diffY = e2.getY() - e1.getY();
+				float diffX = e2.getX() - e1.getX();
+				if (Math.abs(diffX) > Math.abs(diffY))
+				{
+					if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD)
+					{
+						Log.d("Septica", "Finished and Swiped");
+						mThread.finishHand(1);
+					}
+				}
+				else
+				{
+					if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD)
+					{
+						if (diffY > 0)
+						{
+							// swipe bottom
+						}
+						else
+						{
+							// swipe top
+						}
+					}
+				}
+			}
+			catch (Exception exception)
+			{
+				exception.printStackTrace();
+			}
+			return result;
+		}
+	}
 
 }
