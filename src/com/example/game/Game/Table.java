@@ -100,6 +100,9 @@ public class Table
 			}
 		}
 		
+		//clear the table
+		this.clear();
+		
 		return new HandWinner((whichPlayerWasFirst + whatCardWon % mNumberOfPlayers) % mNumberOfPlayers ,
 				numberOfPoints);
 	}

@@ -32,7 +32,10 @@ public class GameThread extends Thread
 
 	// Bot Engine Thread
 	private BotPlay botPlay;
-
+	
+	//Which player was first
+	private int whichPlayerWasFirst;
+	
 	public GameThread(Context context, SurfaceHolder holder)
 	{
 		mContext = context;
@@ -48,9 +51,10 @@ public class GameThread extends Thread
 		// instantiate players
 		player1 = new Player(1);
 		player2 = new Player(2);
-
+		
 		// player1's turn
 		player1.setTurn(true);
+		whichPlayerWasFirst = 1;
 
 		// player2 not turn
 		player2.setTurn(false);
@@ -149,6 +153,62 @@ public class GameThread extends Thread
 			}
 		}
 		return true;
+	}
+	
+	public void finishHand(){
+		HandWinner winner = table.checkHandWinner(whichPlayerWasFirst);
+		whichPlayerWasFirst = winner.getHandWinner();
+		
+		//boolean for knowing if the game is finished
+		boolean gameDone = false;
+		
+		//firstly we have to deal the cards if it is possible
+		if (DeckVector.isEmpty()){
+			gameDone = true;
+		}
+		else {
+			dealCards(winner.getHandWinner());
+		}
+		
+		//set the player that won to start the hand
+		//just for 2 players
+		if (whichPlayerWasFirst == 1){
+			player1.setNumberOfPoints(player1.getNumberOfPoints() + winner.getNumberOfPointsWon());
+		}
+		else {
+			player2.setNumberOfPoints(player2.getNumberOfPoints() + winner.getNumberOfPointsWon());
+		}
+		
+		if (gameDone){
+			Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
+		}
+		else{
+			if (whichPlayerWasFirst == 1){
+				player1.setTurn(true);
+			}
+			else {
+				player2.setTurn(true);
+			}
+		}
+	}
+	
+	//just for 2 players
+	private void dealCards(int whichPlayerHasWon){
+		if (whichPlayerHasWon == 1){
+			while( !DeckVector.isEmpty() && player2.getCards().size() <= 3){
+				player1.getCards().add(DeckVector.pop());
+				player2.getCards().add(DeckVector.pop());
+			}
+		}
+		else {
+			while( !DeckVector.isEmpty() && player1.getCards().size() <= 3){
+				player2.getCards().add(DeckVector.pop());
+				player1.getCards().add(DeckVector.pop());
+			}
+		}
+		player1.setupCards(mWidth, mHeight);
+		player2.setupCards(mWidth, mHeight);
+		
 	}
 
 	private int pseudoRandom()
