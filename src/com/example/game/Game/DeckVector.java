@@ -69,7 +69,7 @@ public abstract class DeckVector
 			deck[i].setHeight(130.0f);
 			deck[i].setWidth(100.0f);
 		}
-		Images.resizeCardBackImage(context, 130, 100);
+		Images.resizeCardBackImage(context, 100, 130);
 
 	}
 
