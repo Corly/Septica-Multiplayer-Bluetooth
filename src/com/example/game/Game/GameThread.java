@@ -139,6 +139,7 @@ public class GameThread extends Thread
 			if (result != -1)
 			{
 				if (table.addToTable(player1.getCard(result))){
+					player1.removeCard(result);
 					player1.setTurn(false);
 					player2.setTurn(true);
 				}
@@ -179,6 +180,7 @@ public class GameThread extends Thread
 					int whatCard = pseudoRandom();
 
 					if (table.addToTable(player2.getCard(whatCard))){
+						player2.removeCard(whatCard);
 						// change player 2 turn
 						player2.setTurn(false);
 						player1.setTurn(true);

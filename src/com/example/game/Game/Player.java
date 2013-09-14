@@ -103,9 +103,14 @@ public class Player
 		if (index < 4 && index >= 0) 
 		{
 			Card card = mCards.get(index);
-			mCards.remove(index);
 			return card;
 		}
 		else return null;
+	}
+	
+	public void removeCard(int index){
+		if (index < 4 && index >= 0) {
+			mCards.remove(index);
+		}
 	}
 }
