@@ -1,5 +1,7 @@
 package com.example.game.Game;
 
+import java.util.ArrayList;
+
 import android.graphics.Canvas;
 
 
@@ -8,11 +10,13 @@ public class Table
 	private Card[] mCards;
 	private int mCount;
 	private int mGameWidth , mGameHeight;
+	private int mNumberOfPlayers;
 	
 	public Table(int numberofplayers)
 	{
 		mCards = new Card[4 * numberofplayers];
 		mCount = 0;
+		mNumberOfPlayers = numberofplayers;
 	}
 	
 	public void clear()
@@ -24,6 +28,10 @@ public class Table
 	{
 		mGameWidth = width;
 		mGameHeight = height;
+	}
+	
+	public int getNumberOfPlayers() {
+		return mNumberOfPlayers;
 	}
 	
 	public boolean addToTable(Card card)
@@ -74,9 +82,6 @@ public class Table
 	//returns an object that was 2 fields: handWinner and numberOfPoints
 	public HandWinner checkHandWinner(int whichPlayerWasFirst){
 		String firstCardName = mCards[0].getNumber();
-		//maybe this variable will be global at some point.
-		//for now is local
-		int numberOfPlayers = 2;
 		int whatCardWon = 0;
 		int numberOfPoints = 0;
 		
@@ -95,8 +100,33 @@ public class Table
 			}
 		}
 		
-		return new HandWinner((whichPlayerWasFirst + whatCardWon % numberOfPlayers) % numberOfPlayers ,
+		return new HandWinner((whichPlayerWasFirst + whatCardWon % mNumberOfPlayers) % mNumberOfPlayers ,
 				numberOfPoints);
 	}
-	
+
+	//return an arraylist with the winners
+	public ArrayList<Integer> checkGameWinner(Player[] players){
+		int maxPoints = 0;
+		int nr = 0;
+		
+		for (int i=0; i<mNumberOfPlayers; i++){
+			if ( players[i].getNumberOfPoints() > maxPoints ){
+				maxPoints = players[i].getNumberOfPoints();
+				nr = 1;
+			}
+			else if ( players[i].getNumberOfPoints() == maxPoints){
+				nr++;
+			}
+		}
+		
+		ArrayList<Integer> winners = new ArrayList<Integer>(nr);
+		
+		for (int i=0; i< mNumberOfPlayers; i++){
+			if (players[i].getNumberOfPoints() == maxPoints){
+				winners.add(players[i].getPlayerIndex());
+			}
+		}
+		
+		return winners;
+	}
 }
