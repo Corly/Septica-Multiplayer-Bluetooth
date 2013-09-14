@@ -38,6 +38,9 @@ public class GameThread extends Thread
 	{
 		mContext = context;
 		mHolder = holder;
+		
+		// Initialize the images this must be done first !!!!!!!!!!!! 
+		Images.init(mContext);
 
 		// initialise botPlay
 		botPlay = new BotPlay();
@@ -88,7 +91,7 @@ public class GameThread extends Thread
 					Canvas canvas = mHolder.lockCanvas();
 					synchronized (mHolder)
 					{
-						canvas.drawColor(Color.BLACK);
+						canvas.drawBitmap(Images.getBackgroundImage(), 0, 0, null);
 						player1.drawCards(canvas);
 						player2.drawCards(canvas);
 						table.drawCards(canvas);

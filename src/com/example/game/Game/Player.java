@@ -12,7 +12,7 @@ public class Player
 	private boolean mIsTurn;
 	private int mPlayerIndex;
 	private int mNumberOfPoints;
-	private int mScreenWidth , mScreenHeight;
+	private int mScreenWidth, mScreenHeight;
 
 	public Player(int playerindex)
 	{
@@ -57,8 +57,19 @@ public class Player
 
 	public void drawCards(Canvas canvas)
 	{
-		for (int i = 0; i < mCards.size(); i++)
-			mCards.get(i).draw(canvas);
+		if (mPlayerIndex == 1)
+		{
+			for (int i = 0; i < mCards.size(); i++)
+				mCards.get(i).draw(canvas);
+		}
+		else
+		{
+			for (int i = 0; i < mCards.size(); i++)
+			{
+				Card card = mCards.get(i);
+				canvas.drawBitmap(Images.getCardBackImage(), card.getCenterX() - card.getWidth() / 2 , card.getCenterY() - card.getHeight() / 2, null);
+			}
+		}
 	}
 
 	public boolean hasStarted()
@@ -107,11 +118,11 @@ public class Player
 		}
 		else return null;
 	}
-	
+
 	public void addCard(Card card)
 	{
 		mCards.add(card);
-		setupCards(mScreenWidth , mScreenHeight);
+		setupCards(mScreenWidth, mScreenHeight);
 	}
 
 	public void removeCard(int index)
