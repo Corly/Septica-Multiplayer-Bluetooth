@@ -103,8 +103,13 @@ public class Table
 		//clear the table
 		this.clear();
 		
-		return new HandWinner((whichPlayerWasFirst + whatCardWon % mNumberOfPlayers) % mNumberOfPlayers ,
-				numberOfPoints);
+		int winner = whichPlayerWasFirst + whatCardWon % mNumberOfPlayers;
+		if ( winner % mNumberOfPlayers == 0){
+			return new HandWinner(winner, numberOfPoints);
+		}
+		else {
+			return new HandWinner(winner % mNumberOfPlayers, numberOfPoints);
+		}
 	}
 
 	//return an arraylist with the winners

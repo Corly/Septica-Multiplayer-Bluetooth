@@ -98,7 +98,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback, On
                 if (Math.abs(diffX) > Math.abs(diffY)) {
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                     	Log.d("Septica", "Finished and Swiped");
-                    	mThread.finishHand();
+                    	mThread.finishHand(1);
                     }
                 } else {
                     if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {

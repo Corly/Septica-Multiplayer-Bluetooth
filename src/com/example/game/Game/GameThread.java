@@ -155,39 +155,44 @@ public class GameThread extends Thread
 		return true;
 	}
 	
-	public void finishHand(){
-		HandWinner winner = table.checkHandWinner(whichPlayerWasFirst);
-		whichPlayerWasFirst = winner.getHandWinner();
-		
-		//boolean for knowing if the game is finished
-		boolean gameDone = false;
-		
-		//firstly we have to deal the cards if it is possible
-		if (DeckVector.isEmpty()){
-			gameDone = true;
-		}
-		else {
-			dealCards(winner.getHandWinner());
-		}
-		
-		//set the player that won to start the hand
-		//just for 2 players
-		if (whichPlayerWasFirst == 1){
-			player1.setNumberOfPoints(player1.getNumberOfPoints() + winner.getNumberOfPointsWon());
-		}
-		else {
-			player2.setNumberOfPoints(player2.getNumberOfPoints() + winner.getNumberOfPointsWon());
-		}
-		
-		if (gameDone){
-			Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
-		}
-		else{
-			if (whichPlayerWasFirst == 1){
-				player1.setTurn(true);
+	public void finishHand(int whichPlayerWantsToFinishHand){
+		Log.d("Septica", whichPlayerWantsToFinishHand + "," + whichPlayerWasFirst);
+		if (whichPlayerWantsToFinishHand == whichPlayerWasFirst){
+			player1.setTurn(false);
+			player2.setTurn(false);
+			HandWinner winner = table.checkHandWinner(whichPlayerWasFirst);
+			whichPlayerWasFirst = winner.getHandWinner();
+
+			//boolean for knowing if the game is finished
+			boolean gameDone = false;
+
+			//firstly we have to deal the cards if it is possible
+			if (DeckVector.isEmpty() && player1.getCards().size() == 0){
+				gameDone = true;
 			}
 			else {
-				player2.setTurn(true);
+				dealCards(winner.getHandWinner());
+			}
+
+			//set the player that won to start the hand
+			//just for 2 players
+			if (winner.getHandWinner() == 1){
+				player1.setNumberOfPoints(player1.getNumberOfPoints() + winner.getNumberOfPointsWon());
+			}
+			else {
+				player2.setNumberOfPoints(player2.getNumberOfPoints() + winner.getNumberOfPointsWon());
+			}
+
+			if (gameDone){
+				Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				if (winner.getHandWinner() == 1){
+					player1.setTurn(true);
+				}
+				else {
+					player2.setTurn(true);
+				}
 			}
 		}
 	}
@@ -208,7 +213,6 @@ public class GameThread extends Thread
 		}
 		player1.setupCards(mWidth, mHeight);
 		player2.setupCards(mWidth, mHeight);
-		
 	}
 
 	private int pseudoRandom()
@@ -227,7 +231,7 @@ public class GameThread extends Thread
 
 				try
 				{
-					Thread.sleep(20);
+					Thread.sleep(1000);
 				}
 				catch (InterruptedException e)
 				{
@@ -238,12 +242,20 @@ public class GameThread extends Thread
 				{
 					// choose a random card from player's 2 hand
 					int whatCard = pseudoRandom();
+					Log.d("Septica", whatCard + "");
 
 					if (table.addToTable(player2.getCard(whatCard))){
 						player2.removeCard(whatCard);
 						// change player 2 turn
 						player2.setTurn(false);
 						player1.setTurn(true);
+					}
+					else {
+						if (whatCard == 0){
+							player1.setTurn(false);
+							player2.setTurn(false);
+							finishHand(2);
+						}
 					}
 				}
 			}
