@@ -1,7 +1,11 @@
 package com.example.game.Game;
 
+import com.example.septica_multiplayer_bluetooth.GameActivity;
+
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -197,7 +201,13 @@ public class GameThread extends Thread
 
 				if (gameDone)
 				{
-					Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
+					((Activity) mContext).runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
+						}
+					});
 				}
 				else
 				{
