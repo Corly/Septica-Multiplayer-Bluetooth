@@ -154,7 +154,7 @@ public class GameThread extends Thread
 				}
 				else
 				{
-					Toast.makeText(mContext, "Illegal move", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "Illegal move", 1).show();
 				}
 			}
 		}
@@ -201,11 +201,17 @@ public class GameThread extends Thread
 
 				if (gameDone)
 				{
+					//just for two players
+					Player[] players = new Player[2];
+					players[0] = player1;
+					players[1] = player2;
+					final int gameWinner = table.checkGameWinner(players).get(0);
+					Log.d("Septica", gameWinner + " winner");
 					((Activity) mContext).runOnUiThread(new Runnable() {
 						
 						@Override
 						public void run() {
-							Toast.makeText(mContext, "Finish", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, "Player " + gameWinner + " has won!", Toast.LENGTH_SHORT).show();
 						}
 					});
 				}
