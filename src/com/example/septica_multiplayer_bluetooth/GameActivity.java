@@ -10,7 +10,7 @@ import com.example.game.Game.GameSheet;
 
 public class GameActivity extends Activity
 {
-	GameSheet gameSheet;
+	private GameSheet gameSheet;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
