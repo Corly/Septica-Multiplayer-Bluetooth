@@ -6,10 +6,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".GameActivity" >
+    tools:context=".ServerGameActivity" >
 
     <com.example.game.Game.GameSheet
-        android:id="@+id/GameSHeet"
+        android:id="@+id/GameSheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

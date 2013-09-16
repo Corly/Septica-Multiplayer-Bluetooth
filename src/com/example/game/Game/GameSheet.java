@@ -78,6 +78,11 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 	{
 		return mGestureDetector.onTouchEvent(event);
 	}
+	
+	public void pauseGame(boolean paused)
+	{
+		mThread.pauseGame(paused);
+	}
 
 	private final class GestureListener extends SimpleOnGestureListener
 	{

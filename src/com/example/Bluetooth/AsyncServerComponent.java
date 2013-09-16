@@ -97,7 +97,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 			mUpdater.useData(strings);
 	}
 
-	protected void closeSockets()
+	public void closeSockets()
 	{
 		try
 		{

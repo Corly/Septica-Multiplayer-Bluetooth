@@ -43,7 +43,7 @@ public class MainActivity extends Activity
 	
 	public void HostClick(View view)
 	{
-		Intent intent = new Intent(MainActivity.this , GameActivity.class);
+		Intent intent = new Intent(MainActivity.this , ServerGameActivity.class);
 		this.startActivity(intent);
 	}
 	

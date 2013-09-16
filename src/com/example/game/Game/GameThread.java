@@ -1,6 +1,6 @@
 package com.example.game.Game;
 
-import com.example.septica_multiplayer_bluetooth.GameActivity;
+import com.example.septica_multiplayer_bluetooth.ServerGameActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -65,6 +65,8 @@ public class GameThread extends Thread
 
 		// table dimension
 		table = new Table(2);
+		
+		mPaused = true;
 		Log.d("Septica", "Cards are now created!");
 	}
 
@@ -75,6 +77,11 @@ public class GameThread extends Thread
 		player1.setupCards(mWidth, mHeight);
 		player2.setupCards(mWidth, mHeight);
 		table.setWidthHeight(mWidth, mHeight);
+	}
+	
+	public void pauseGame(boolean paused)
+	{
+		mPaused = paused;
 	}
 
 	public void run()
