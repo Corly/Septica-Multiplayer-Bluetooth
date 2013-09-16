@@ -3,11 +3,12 @@ package com.example.septica_multiplayer_bluetooth;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -40,7 +41,13 @@ public class ServerGameActivity extends Activity
 	    mAlertBuilder = new AlertDialog.Builder(ServerGameActivity.this);
 	    mAlertBuilder.setView(sp);
 	    mAlertBuilder.setMessage("Waiting for players..");
-	    mAlertBuilder.setCancelable(false);
+	    mAlertBuilder.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				finish();
+			}
+		});
 	    mAlertBuilder.create().show();
 	}
 	
