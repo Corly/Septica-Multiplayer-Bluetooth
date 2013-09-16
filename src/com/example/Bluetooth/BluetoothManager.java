@@ -15,52 +15,56 @@ import android.widget.ArrayAdapter;
 
 public class BluetoothManager
 {
-	private BluetoothAdapter bluetoothAdapter;
-	private Context context;
-	private ArrayAdapter<String> list;
-	private ArrayList<BluetoothDevice> foundDevices;
-	private HashMap<String, Integer> hash;
+	private BluetoothAdapter mBluetoothAdapter;
+	private Context mContext;
+	private ArrayAdapter<String> mList;
+	private ArrayList<BluetoothDevice> mFoundDevices;
+	private HashMap<String, Integer> mHash;
+	private boolean mDiscover;
 
 	public BluetoothManager(Context context, ArrayAdapter<String> list)
 	{
-		this.context = context;
-		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		foundDevices = new ArrayList<BluetoothDevice>();
-		hash = new HashMap<String, Integer>();
-		this.list = list;
+		this.mContext = context;
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		mFoundDevices = new ArrayList<BluetoothDevice>();
+		mHash = new HashMap<String, Integer>();
+		this.mList = list;
 	}
 
 	public boolean checkDevices()
 	{
-		if (bluetoothAdapter == null)
+		if (mBluetoothAdapter == null)
 		{
 			// check if the device has Bluetooth
 			return false;
 		}
-		if (!bluetoothAdapter.isEnabled())
+		if (!mBluetoothAdapter.isEnabled())
 		{
 			// check if the bluetooth is enabled
 			Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			context.startActivity(enableBluetooth);
+			mContext.startActivity(enableBluetooth);
 		}
-		Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+		Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
 		if (pairedDevices.size() > 0)
 		{
 			for (BluetoothDevice device : pairedDevices)
 			{
-				foundDevices.add(device);
-				list.add("Name: " + device.getName() + "\n" + "Adress: " + device.getAddress() + "\nPaired and not in range");
-				hash.put(device.getAddress(), hash.size());
+				mFoundDevices.add(device);
+				mList.add("Name: " + device.getName() + "\n" + "Adress: " + device.getAddress() + "\nPaired and not in range");
+				mHash.put(device.getAddress(), mHash.size());
 			}
-			list.notifyDataSetChanged();
+			mList.notifyDataSetChanged();
 		}
-		bluetoothAdapter.startDiscovery();
-		IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		context.registerReceiver(receiver, filter);
+		mBluetoothAdapter.startDiscovery();
+		mDiscover = true;
+		IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		IntentFilter filter2 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		mContext.registerReceiver(mFoundReceiver, filter1);
+		mContext.registerReceiver(mFoundReceiver, filter2);
 		return true;
 	}
 
-	private final BroadcastReceiver receiver = new BroadcastReceiver()
+	private final BroadcastReceiver mFoundReceiver = new BroadcastReceiver()
 	{
 
 		@Override
@@ -70,22 +74,31 @@ public class BluetoothManager
 			if (BluetoothDevice.ACTION_FOUND.equals(action))
 			{
 				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				if (!hash.containsKey(device.getAddress()))
+				if (!mHash.containsKey(device.getAddress()))
 				{
-					foundDevices.add(device);
-					list.add("Name: " + device.getName() + "\n" + "Adress: " + device.getAddress() + "\nNot paired and in range");
-					list.notifyDataSetChanged();
+					mFoundDevices.add(device);
+					mList.add("Name: " + device.getName() + "\n" + "Adress: " + device.getAddress() + "\nNot paired and in range");
+					mList.notifyDataSetChanged();
+					mHash.put(device.getAddress(), mHash.size());
 					Log.d("BLT", "Name: " + device.getName() + "\n" + "Adress: " + device.getAddress());
 				}
 				else
 				{
-					int index = hash.get(device.getAddress());
-					String value = list.getItem(index);
-					list.remove(value);
+					int index = mHash.get(device.getAddress());
+					Log.d("BLT" , "Already in the list  " + index);
+					String value = mList.getItem(index);
+					mList.remove(value);
 					value = ("Name: " + device.getName() + "\n" + "Adress: " + device.getAddress() + "\nPaired and in range");
-					list.insert(value, index);
-					list.notifyDataSetChanged();
+					mList.insert(value, index);
+					mList.notifyDataSetChanged();
+					
 				}
+			}
+			if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+			{
+				/* If the device finished the scanning it will start to rescan :) */
+				if (mDiscover) mBluetoothAdapter.startDiscovery();
+				Log.d("BLT", "Rescanning...");
 			}
 		}
 
@@ -93,23 +106,22 @@ public class BluetoothManager
 
 	public void stopDiscovery()
 	{
-		bluetoothAdapter.cancelDiscovery();
+		mBluetoothAdapter.cancelDiscovery();
+		mDiscover = false;
 	}
 
 	public void destroy()
 	{
-		bluetoothAdapter = null;
-		foundDevices.clear();
-		foundDevices = null;
-		list.clear();
-		list = null;
-		hash.clear();
-		hash = null;
+		mBluetoothAdapter.cancelDiscovery();
+		mDiscover = false;
+		mFoundDevices.clear();
+		mList.clear();
+		mHash.clear();
 	}
 
 	public BluetoothDevice getDevice(int index)
 	{
-		return foundDevices.get(index);
+		return mFoundDevices.get(index);
 	}
 
 }

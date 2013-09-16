@@ -7,8 +7,9 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +18,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.septica_multiplayer_bluetooth.MainActivity"
-            android:label="@string/app_name" 
+            android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +29,7 @@
         <activity
             android:name="com.example.vs.computer.Game"
             android:screenOrientation="landscape" >
-        	android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        	android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name="com.example.septica_multiplayer_bluetooth.ServerGameActivity"
@@ -38,7 +39,12 @@
         </activity>
         <activity
             android:name="com.example.septica_multiplayer_bluetooth.DevicesActivity"
-            android:label="@string/title_activity_devices" 
+            android:label="@string/title_activity_devices"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.example.septica_multiplayer_bluetooth.ClientGameActivity"
+            android:label="@string/title_activity_client_game" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
     </application>

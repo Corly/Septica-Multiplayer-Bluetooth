@@ -20,14 +20,18 @@ public class ServerGameActivity extends Activity
 {
 	private GameSheet gameSheet;
 	private AsyncServerComponent mServer;
-	AlertDialog.Builder mAlertBuilder;
+	private AlertDialog mAlertDialog;
 	private UILink mUILink = new UILink()
 	{
 
 		@Override
 		public void useData(String... args)
 		{
-			
+			if (args[0].equals("!Start!"))
+			{
+				mAlertDialog.dismiss();
+				gameSheet.pauseGame(false);
+			}
 		}
 		
 	};
@@ -38,17 +42,18 @@ public class ServerGameActivity extends Activity
 	    sp.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
 	    sp.setIndeterminate(true);
 	    
-	    mAlertBuilder = new AlertDialog.Builder(ServerGameActivity.this);
-	    mAlertBuilder.setView(sp);
-	    mAlertBuilder.setMessage("Waiting for players..");
-	    mAlertBuilder.setOnCancelListener(new OnCancelListener() {
+	    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ServerGameActivity.this);
+	    alertBuilder.setView(sp);
+	    alertBuilder.setMessage("Waiting for players..");
+	    alertBuilder.setOnCancelListener(new OnCancelListener() {
 			
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				finish();
 			}
 		});
-	    mAlertBuilder.create().show();
+	    mAlertDialog = alertBuilder.create();
+	    mAlertDialog.show();
 	}
 	
 	@Override
@@ -62,6 +67,7 @@ public class ServerGameActivity extends Activity
 		mServer = new AsyncServerComponent(this, mUILink);
 		buildDialog();
 		mServer.execute();
+		
 		
 	}
 

@@ -3,6 +3,7 @@ package com.example.septica_multiplayer_bluetooth;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
@@ -53,11 +54,10 @@ public class DevicesActivity extends Activity
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long ID)
 		{
-			/*Intent next = new Intent(ClientActivity.this, ConnectedActivity.class);
+			Intent next = new Intent(DevicesActivity.this, ClientGameActivity.class);
 			next.putExtra("index", position);
 			mManager.stopDiscovery();
-			mContext.startActivity(next);*/
-
+			mContext.startActivity(next);
 		}
 
 	};

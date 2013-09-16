@@ -66,7 +66,6 @@ public class GameThread extends Thread
 		// table dimension
 		table = new Table(2);
 		
-		mPaused = true;
 		Log.d("Septica", "Cards are now created!");
 	}
 
@@ -87,7 +86,7 @@ public class GameThread extends Thread
 	public void run()
 	{
 		mRunning = true;
-		mPaused = false;
+		mPaused = true;
 
 		// Start botPlay
 		botPlay.start();

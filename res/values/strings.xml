@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_game">GameActivity</string>
     <string name="title_activity_devices">DevicesActivity</string>
+    <string name="title_activity_client_game">ClientGameActivity</string>
 
 </resources>
