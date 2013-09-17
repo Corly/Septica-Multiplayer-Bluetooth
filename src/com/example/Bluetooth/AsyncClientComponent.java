@@ -35,7 +35,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 	protected Void doInBackground(Void... params)
 	{
 		int num_errors = 0;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			try
 			{
@@ -44,32 +44,30 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 			}
 			catch (Exception connectEr)
 			{
-				try
-				{
-					Log.d("BLT", connectEr.getMessage());
-					this.publishProgress("Connection to " + mDataSocket.getRemoteDevice().getName() + " has failed!");
-					mDataSocket.close();
-					num_errors ++;
-					continue;
-				}
-				catch (IOException closeEr)
-				{
-					Log.d("BLT", closeEr.getMessage());
-					this.publishProgress("Connection to " + mDataSocket.getRemoteDevice().getName() + " has failed!");
-					num_errors ++;
-					continue;
-				}
+				Log.d("BLT", connectEr.getMessage());
+				this.publishProgress("Connection to " + mDataSocket.getRemoteDevice().getName() + " has failed!");
+				num_errors++;
+				continue;
 			}
 		}
 		if (num_errors == 4)
 		{
 			this.publishProgress("!Connection error!");
+			try
+			{
+				mDataSocket.close();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 		}
 		mManager = new ConnectionManager(mDataSocket, mUpdater);
 		mManager.execute();
 		this.publishProgress("!Connection established!");
-		Log.d("BLT","Connection established to " + mDataSocket.getRemoteDevice().getName());
+		Log.d("BLT", "Connection established to " + mDataSocket.getRemoteDevice().getName());
 
 		return null;
 	}

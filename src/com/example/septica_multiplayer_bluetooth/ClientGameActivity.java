@@ -36,7 +36,7 @@ public class ClientGameActivity extends Activity
 				mAlertDialog.setMessage("Connection established to " + mDeviceToConnect.getName() + "\r\n" + "Waiting for host..");
 				mAlertDialog.show();
 			}
-			if (args[0].equals("!Connection failed!"))
+			if (args[0].equals("!Connection error!"))
 			{
 				finish();
 			}
