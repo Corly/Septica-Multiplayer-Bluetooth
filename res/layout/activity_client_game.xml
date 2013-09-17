@@ -9,7 +9,7 @@
     tools:context=".ClientGameActivity" >
 
     <com.example.game.Game.GameSheet
-        android:id="@+id/gameSheet1"
+        android:id="@+id/clientGameSheet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

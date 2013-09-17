@@ -1,21 +1,22 @@
 package com.example.septica_multiplayer_bluetooth;
 
-import com.example.Bluetooth.AsyncClientComponent;
-import com.example.Bluetooth.UILink;
-import com.example.game.Game.GameSheet;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ActionBar.LayoutParams;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.example.Bluetooth.AsyncClientComponent;
+import com.example.Bluetooth.UILink;
+import com.example.game.Game.GameSheet;
 
 public class ClientGameActivity extends Activity
 {
@@ -24,6 +25,7 @@ public class ClientGameActivity extends Activity
 	private BluetoothDevice mDeviceToConnect;
 	private AsyncClientComponent mClient;
 	private AlertDialog mAlertDialog;
+	private TextView mAlertDialogText;
 	
 	private UILink mUpdater = new UILink()
 	{
@@ -32,9 +34,12 @@ public class ClientGameActivity extends Activity
 		{
 			if (args[0].equals("!Connection established!"))
 			{
+				mAlertDialogText.setText("Connection established to " + mDeviceToConnect.getName() + "\r\n" + "Waiting for host..");
+			}
+			if (args[0].equals("!Start!"))
+			{
 				mAlertDialog.dismiss();
-				mAlertDialog.setMessage("Connection established to " + mDeviceToConnect.getName() + "\r\n" + "Waiting for host..");
-				mAlertDialog.show();
+				mGameSheet.startGame();
 			}
 			if (args[0].equals("!Connection error!"))
 			{
@@ -45,14 +50,12 @@ public class ClientGameActivity extends Activity
 	};
 	
 	private void buildDialog()
-	{
-	    final ProgressBar sp = new ProgressBar(ClientGameActivity.this);
-	    sp.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-	    sp.setIndeterminate(true);
-	    
+	{	    
 	    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ClientGameActivity.this);
-	    alertBuilder.setView(sp);
-	    alertBuilder.setMessage("Connecting to " + mDeviceToConnect.getName() + "..");
+	    LayoutInflater inflater = getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.dialog, (ViewGroup) getCurrentFocus());
+        
+        alertBuilder.setView(dialoglayout);
 	    alertBuilder.setOnCancelListener(new OnCancelListener() {
 			
 			@Override
@@ -62,16 +65,19 @@ public class ClientGameActivity extends Activity
 		});
 	    mAlertDialog = alertBuilder.create();
 	    mAlertDialog.show();
+	    
+	    mAlertDialogText = (TextView)mAlertDialog.findViewById(R.id.alertTextview);
+	    mAlertDialogText.setText("Connecting to " + mDeviceToConnect.getName() + "..");
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_client_game);
+		mGameSheet = new GameSheet(this);
+		setContentView(mGameSheet);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		mGameSheet = (GameSheet)findViewById(R.id.GameSheet);
 		Bundle extras = this.getIntent().getExtras();
 		mDeviceIndex = extras.getInt("index");
 		mDeviceToConnect = DevicesActivity.getDevice(mDeviceIndex);

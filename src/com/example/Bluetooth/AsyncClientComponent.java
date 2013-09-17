@@ -50,7 +50,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 				continue;
 			}
 		}
-		if (num_errors == 4)
+		if (num_errors == 10)
 		{
 			this.publishProgress("!Connection error!");
 			try

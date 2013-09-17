@@ -1,10 +1,7 @@
 package com.example.Bluetooth;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Scanner;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
@@ -30,7 +27,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		}
 		catch (Exception er)
 		{
-			Log.d("BLT","Couldn't obtain the streams from socket!");
+			Log.d("BLT", "Couldn't obtain the streams from socket!");
 		}
 		mInput = tmpInput;
 		mOutput = tmpOutput;
@@ -38,17 +35,31 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 
 	public Void doInBackground(Void... params)
 	{
+		
 		while (true)
 		{
+			Log.d("BLT","Looking for data..");
 			try
 			{
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mInput, "UTF-8"));
-				this.publishProgress(bufferedReader.readLine());
+				byte[] buf = new byte[100];
+				for (int i = 0;i<100;i++)
+						buf[i] = 0;
+				int bytes = mInput.read(buf);
+				String string = new String(buf);
+				int index = string.lastIndexOf("!");
+				if (index == -1)
+				{
+					Thread.sleep(20);
+					continue;
+				}
+				string = string.substring(0, index+1);
+				Log.d("BLT" , string);
+				this.publishProgress(string);
 				Thread.sleep(20);
 			}
 			catch (Exception er)
 			{
-				Log.d("BLT",er.getMessage());
+				Log.d("BLT", er.getMessage());
 				break;
 			}
 		}

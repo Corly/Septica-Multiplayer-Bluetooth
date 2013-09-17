@@ -70,6 +70,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 					mServerSocket.close();
 					mManager = new ConnectionManager(socket , mUpdater);
 					mManager.execute();
+					this.publishProgress("!Start!");
 					break;
 				}
 				catch (IOException e)
@@ -86,7 +87,6 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 				e.printStackTrace();
 			}
 		}
-		this.publishProgress(socket.getRemoteDevice().getName() + " has connected!");
 
 		return null;
 	}

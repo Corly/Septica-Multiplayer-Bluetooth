@@ -52,12 +52,17 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 		mThread.setWH(width, height);
 		Log.d("Septica", "Surface was changed!");
 	}
+	
+	public void startGame()
+	{
+		mThread.start();
+	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder)
 	{
-		mThread.start();
 		Log.d("Septica", "Surface was created!");
+		//mThread.start();
 	}
 
 	@Override

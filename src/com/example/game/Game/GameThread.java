@@ -86,7 +86,7 @@ public class GameThread extends Thread
 	public void run()
 	{
 		mRunning = true;
-		mPaused = true;
+		mPaused = false;
 
 		// Start botPlay
 		botPlay.start();
