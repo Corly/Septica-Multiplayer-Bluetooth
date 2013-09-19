@@ -3,6 +3,7 @@ package com.example.game.Game;
 import java.util.Random;
 
 import android.content.Context;
+import android.util.Log;
 
 public abstract class DeckVector
 {
@@ -20,6 +21,8 @@ public abstract class DeckVector
 	{
 		deck = new Card[32];
 		size = 32;
+		Images.init(context);
+		Images.resizeCardBackImage(context, 100, 130);
 
 		/*
 		 * t c caro r rosie n neagra
@@ -66,11 +69,29 @@ public abstract class DeckVector
 		deck[31] = new Card("n8", context);
 		for (int i = 0; i < size; i++)
 		{
-			deck[i].setHeight(130.0f);
 			deck[i].setWidth(100.0f);
+			deck[i].setHeight(130.0f);
 		}
-		Images.resizeCardBackImage(context, 100, 130);
 
+	}
+	
+	public static void initFromNames(String[] cardData , Context context)
+	{
+		deck = new Card[32];
+		size = 32;
+		Images.init(context);
+		Images.resizeCardBackImage(context, 100, 130);
+		
+		for (int i = 0;i<32;i++)
+		{
+			deck[i] = new Card(cardData[i],context);
+		}
+		
+		for (int i = 0; i < size; i++)
+		{
+			deck[i].setWidth(100.0f);
+			deck[i].setHeight(130.0f);
+		}
 	}
 
 	public static void reinitSize()
@@ -113,6 +134,17 @@ public abstract class DeckVector
 		{
 			return false;
 		}
+	}
+	
+	public static String getCardsInOrder()
+	{
+		String result = "";
+		for (int i = 0;i<32;i++)
+		{
+			result += (deck[i].getColor() + deck[i].getNumber());
+			if (i != 31) result += ",";
+		}
+		return result;
 	}
 
 }

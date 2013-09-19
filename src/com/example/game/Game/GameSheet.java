@@ -26,7 +26,6 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 		mContext = context;
 		mHolder = this.getHolder();
 		mHolder.addCallback(this);
-		mThread = new GameThread(context, mHolder);
 		mGestureDetector = new GestureDetector(mContext, new GestureListener());
 		setOnTouchListener(this);
 		Log.d("Septica", "GameSheet constructor 1");
@@ -38,7 +37,6 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 		mContext = context;
 		mHolder = this.getHolder();
 		mHolder.addCallback(this);
-		mThread = new GameThread(context, mHolder);
 		mGestureDetector = new GestureDetector(mContext, new GestureListener());
 		setOnTouchListener(this);
 		Log.d("Septica", "GameSheet constructor 2");
@@ -49,12 +47,13 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 	{
 		mWidth = width;
 		mHeight = height;
-		mThread.setWH(width, height);
 		Log.d("Septica", "Surface was changed!");
 	}
 	
-	public void startGame()
+	public void startGame(int myPlayerIndex)
 	{
+		mThread = new GameThread(mContext, mHolder , myPlayerIndex);
+		mThread.setWH(mWidth, mHeight);
 		mThread.start();
 	}
 
@@ -68,7 +67,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder)
 	{
-		mThread.stopRunning();
+		if (mThread != null) mThread.stopRunning();
 		mThread = null;
 		Log.d("Septica", "Surface was destroyed!");
 	}

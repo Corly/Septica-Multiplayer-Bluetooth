@@ -2,6 +2,7 @@ package com.example.septica_multiplayer_bluetooth;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
@@ -16,14 +17,18 @@ import android.widget.TextView;
 
 import com.example.Bluetooth.AsyncServerComponent;
 import com.example.Bluetooth.UILink;
+import com.example.game.Game.DeckVector;
 import com.example.game.Game.GameSheet;
 
 public class ServerGameActivity extends Activity
 {
 	private GameSheet mGameSheet;
-	private AsyncServerComponent mServer;
+	private AsyncServerComponent[] mServer = new AsyncServerComponent[1];
 	private AlertDialog mAlertDialog;
 	private TextView mAlertDialogText;
+	private Context mContext;
+	
+	
 	private UILink mUILink = new UILink()
 	{
 
@@ -33,10 +38,21 @@ public class ServerGameActivity extends Activity
 			if (args[0].equals("!Start!"))
 			{
 				mAlertDialog.dismiss();
-				mGameSheet.startGame();
-				mServer.write("!Start!");
+				DeckVector.init(mContext);
+				DeckVector.shuffle();
+				for (int i = 0;i<mServer.length;i++)
+				{
+					mServer[i].write("!Start " +  (i + 2)  + " " +  DeckVector.getCardsInOrder()+"!");
+				}
+				mGameSheet.startGame(1);
 				Log.d("Septica" , "Game started!");
 			}
+		}
+
+		@Override
+		public void reportAction(String... args)
+		{
+			mServer[0].write(args[0]);
 		}
 		
 	};
@@ -68,13 +84,16 @@ public class ServerGameActivity extends Activity
 		super.onCreate(savedInstanceState);
 		mGameSheet = new GameSheet(this);
 		setContentView(mGameSheet);
+		mContext = this;
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		//gameSheet = (GameSheet)findViewById(R.id.serverGameSheet);
 		
-		mServer = new AsyncServerComponent(this, mUILink);
+		for (int i = 0;i<mServer.length;i++)
+		{
+			mServer[0] = new AsyncServerComponent(this, mUILink);
+			mServer[0].execute();
+		}
 		buildDialog();
-		mServer.execute();
 		
 		
 	}
@@ -90,8 +109,11 @@ public class ServerGameActivity extends Activity
 	@Override
 	public void onDestroy()
 	{
-		mServer.closeSockets();
-		mServer.cancel(true);
+		for (int i = 0;i<mServer.length;i++)
+		{
+			mServer[0].closeSockets();
+			mServer[0].cancel(true);
+		}
 		super.onDestroy();
 	}
 

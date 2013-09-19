@@ -52,6 +52,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 	protected Void doInBackground(Void... arg0)
 	{
 		BluetoothSocket socket = null;
+		if (mServerSocket == null) return null;
 		while (true)
 		{
 			try

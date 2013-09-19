@@ -41,9 +41,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 			Log.d("BLT","Looking for data..");
 			try
 			{
-				byte[] buf = new byte[100];
-				for (int i = 0;i<100;i++)
-						buf[i] = 0;
+				byte[] buf = new byte[1000];
 				int bytes = mInput.read(buf);
 				String string = new String(buf);
 				int index = string.lastIndexOf("!");

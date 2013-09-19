@@ -3,10 +3,12 @@ package com.example.septica_multiplayer_bluetooth;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.Bluetooth.AsyncClientComponent;
 import com.example.Bluetooth.UILink;
+import com.example.game.Game.DeckVector;
 import com.example.game.Game.GameSheet;
 
 public class ClientGameActivity extends Activity
@@ -26,6 +29,7 @@ public class ClientGameActivity extends Activity
 	private AsyncClientComponent mClient;
 	private AlertDialog mAlertDialog;
 	private TextView mAlertDialogText;
+	private Context mContext;
 	
 	private UILink mUpdater = new UILink()
 	{
@@ -36,15 +40,25 @@ public class ClientGameActivity extends Activity
 			{
 				mAlertDialogText.setText("Connection established to " + mDeviceToConnect.getName() + "\r\n" + "Waiting for host..");
 			}
-			if (args[0].equals("!Start!"))
+			if (args[0].contains("Start"))
 			{
 				mAlertDialog.dismiss();
-				mGameSheet.startGame();
+				String[] m = args[0].substring(0,args[0].length()-1).split(" ");
+				String[] cardArray = m[2].split(",");
+				Log.d("BLT",cardArray.length+"");
+				DeckVector.initFromNames(cardArray, mContext);
+				mGameSheet.startGame(Integer.parseInt(m[1]));
 			}
 			if (args[0].equals("!Connection error!"))
 			{
 				finish();
 			}
+		}
+
+		@Override
+		public void reportAction(String... args)
+		{
+			
 		}
 		
 	};
@@ -76,6 +90,7 @@ public class ClientGameActivity extends Activity
 		super.onCreate(savedInstanceState);
 		mGameSheet = new GameSheet(this);
 		setContentView(mGameSheet);
+		mContext = this;
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		Bundle extras = this.getIntent().getExtras();
