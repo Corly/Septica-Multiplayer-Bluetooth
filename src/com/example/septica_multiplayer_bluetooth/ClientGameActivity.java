@@ -43,22 +43,33 @@ public class ClientGameActivity extends Activity
 			if (args[0].contains("Start"))
 			{
 				mAlertDialog.dismiss();
-				String[] m = args[0].substring(0,args[0].length()-1).split(" ");
-				String[] cardArray = m[2].split(",");
+				String[] arguments = args[0].substring(0,args[0].length()-1).split(" ");
+				String[] cardArray = arguments[2].split(",");
 				Log.d("BLT",cardArray.length+"");
 				DeckVector.initFromNames(cardArray, mContext);
-				mGameSheet.startGame(Integer.parseInt(m[1]));
+				mGameSheet.startGame(Integer.parseInt(arguments[1]) , this);
 			}
 			if (args[0].equals("!Connection error!"))
 			{
 				finish();
+			}
+			if (args[0].contains("Updatecards"))
+			{
+				String arguments = args[0].replace("!", "");
+				String[] data = arguments.split(" ");
+				mGameSheet.updateCards(Integer.parseInt(data[1]), Integer.parseInt(data[2]));
+			}
+
+			if (args[0].equals("!FinishHand!"))
+			{
+				mGameSheet.sendFinishHand();
 			}
 		}
 
 		@Override
 		public void reportAction(String... args)
 		{
-			
+			mClient.write(args[0]);
 		}
 		
 	};

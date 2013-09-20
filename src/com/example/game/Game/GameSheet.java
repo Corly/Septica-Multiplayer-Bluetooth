@@ -11,6 +11,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import com.example.Bluetooth.UILink;
+
 public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , OnTouchListener
 {
 	private SurfaceHolder mHolder;
@@ -50,12 +52,14 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 		Log.d("Septica", "Surface was changed!");
 	}
 	
-	public void startGame(int myPlayerIndex)
+	public void startGame(int myPlayerIndex , UILink linker)
 	{
 		mThread = new GameThread(mContext, mHolder , myPlayerIndex);
+		mThread.setUILink(linker);
 		mThread.setWH(mWidth, mHeight);
 		mThread.start();
 	}
+	
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder)
@@ -87,6 +91,16 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 	{
 		mThread.pauseGame(paused);
 	}
+	
+	public void updateCards(int playerIndex , int cardIndex)
+	{
+		mThread.updateCards(playerIndex, cardIndex);
+	}
+	
+	public void sendFinishHand()
+	{
+		mThread.sendFinishHand();
+	}
 
 	private final class GestureListener extends SimpleOnGestureListener
 	{
@@ -114,7 +128,7 @@ public class GameSheet extends SurfaceView implements SurfaceHolder.Callback , O
 					if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD)
 					{
 						Log.d("Septica", "Finished and Swiped");
-						mThread.finishHand(1, true);
+						mThread.finishHand(true);
 					}
 				}
 				else

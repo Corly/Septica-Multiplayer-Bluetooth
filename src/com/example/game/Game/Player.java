@@ -28,7 +28,7 @@ public class Player
 	{
 		mScreenWidth = screenWidth;
 		mScreenHeight = screenHeight;
-		if (mPlayerIndex == 1)
+		if (mPlayerIndex == 0)
 		{
 			float cardWidth = mCards.get(0).getWidth();
 			float cardHeight = mCards.get(0).getHeight();
@@ -41,7 +41,7 @@ public class Player
 			}
 		}
 
-		if (mPlayerIndex == 2)
+		if (mPlayerIndex == 1)
 		{
 			float cardWidth = mCards.get(0).getWidth();
 			float cardHeight = mCards.get(0).getHeight();
@@ -55,9 +55,9 @@ public class Player
 		}
 	}
 
-	public void drawCards(Canvas canvas)
+	public void drawCards(Canvas canvas , int myIndex)
 	{
-		if (mPlayerIndex == 1)
+		if (mPlayerIndex == myIndex)
 		{
 			for (int i = 0; i < mCards.size(); i++)
 				mCards.get(i).draw(canvas);

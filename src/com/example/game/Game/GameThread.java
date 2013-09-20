@@ -1,5 +1,7 @@
 package com.example.game.Game;
 
+import com.example.Bluetooth.UILink;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -27,56 +29,56 @@ public class GameThread extends Thread
 	/* The table where the cards are */
 	private Table mTable;
 	private int mMyIndex;
+	private UILink mUpdater;
 
 	// Bot Engine Thread
 
 	// Which player was first
 	private int whichPlayerWasFirst;
 
-	public GameThread(Context context, SurfaceHolder holder , int myPlayerIndex)
+	public GameThread(Context context, SurfaceHolder holder, int myPlayerIndex)
 	{
 		mContext = context;
 		mHolder = holder;
 		mMyIndex = myPlayerIndex;
-		
 
 		// instantiate players
 		mPlayers = new Player[2];
-		if (myPlayerIndex == 1)
+
+		for (int i = 0; i < 2; i++)
 		{
-			for (int i = 0;i<2;i++)
-				mPlayers[i] = new Player(i+1);
+			mPlayers[i] = new Player(i);
+			mPlayers[i].setTurn(false);
 		}
-		else
-		{
-			mPlayers[1] = new Player(2);
-			mPlayers[0] = new Player(1);
-		}
+		mPlayers[0].setTurn(true);
 
 		// player1's turn
-		mPlayers[0].setTurn(true);
-		whichPlayerWasFirst = 1;
+		whichPlayerWasFirst = 0;
 
 		// player2 not turn
-		mPlayers[1].setTurn(false);
 
 		// table dimension
 		mTable = new Table(2);
-		
+
 		Log.d("Septica", "Cards are now created!");
+	}
+
+	public void setUILink(UILink linker)
+	{
+		mUpdater = linker;
 	}
 
 	public void setWH(int width, int height)
 	{
 		mHeight = height;
 		mWidth = width;
-		for (int i = 0;i<2;i++)
+		for (int i = 0; i < 2; i++)
 		{
 			mPlayers[i].setupCards(mWidth, mHeight);
 		}
 		mTable.setWidthHeight(mWidth, mHeight);
 	}
-	
+
 	public void pauseGame(boolean paused)
 	{
 		mPaused = paused;
@@ -97,9 +99,9 @@ public class GameThread extends Thread
 					synchronized (mHolder)
 					{
 						canvas.drawBitmap(Images.getBackgroundImage(), 0, 0, null);
-						for (int i = 0;i<2;i++)
+						for (int i = 0; i < 2; i++)
 						{
-							mPlayers[i].drawCards(canvas);
+							mPlayers[i].drawCards(canvas, mMyIndex);
 						}
 						mTable.drawCards(canvas);
 						mHolder.unlockCanvasAndPost(canvas);
@@ -134,16 +136,18 @@ public class GameThread extends Thread
 	public boolean handleTouch(MotionEvent event)
 	{
 
-		if (mPlayers[0].isTurn())
+		if (mPlayers[mMyIndex].isTurn())
 		{
-			int result = mPlayers[0].checkTouch(event);
+			int result = mPlayers[mMyIndex].checkTouch(event);
 			if (result != -1)
 			{
-				if (mTable.addToTable(mPlayers[0].getCard(result)))
+				if (mTable.addToTable(mPlayers[mMyIndex].getCard(result)))
 				{
-					mPlayers[0].removeCard(result);
-					mPlayers[0].setTurn(false);
-					mPlayers[1].setTurn(true);
+					mPlayers[mMyIndex].removeCard(result);
+					mPlayers[mMyIndex].setTurn(false);
+					mPlayers[(mMyIndex + 1) % 2].setTurn(true); // 2 is the number of players
+					mUpdater.reportAction("!Updatecards " + mMyIndex + " " + result + "!");
+
 				}
 				else
 				{
@@ -154,14 +158,83 @@ public class GameThread extends Thread
 		return true;
 	}
 
-	public void finishHand(int whichPlayerWantsToFinishHand, boolean player1WantsToSwipe)
+	public void updateCards(int playerIndex, int cardIndex)
 	{
-		Log.d("Septica", whichPlayerWantsToFinishHand + "," + whichPlayerWasFirst);
-		if ( player1WantsToSwipe && (mPlayers[0].isTurn() == false)){
-			//player1 can not finish the hand
+		if (mTable.addToTable(mPlayers[playerIndex].getCard(cardIndex)))
+		{
+			mPlayers[playerIndex].removeCard(cardIndex);
+			mPlayers[(playerIndex + 1) % 2].setTurn(true); // 2 is the number of players
+			mPlayers[playerIndex].setTurn(false);
 		}
-		else {
-			if (whichPlayerWantsToFinishHand == whichPlayerWasFirst)
+	}
+	
+	public void sendFinishHand()
+	{
+		mPlayers[0].setTurn(false);
+		mPlayers[1].setTurn(false);
+		HandWinner winner = mTable.checkHandWinner(whichPlayerWasFirst);
+		whichPlayerWasFirst = winner.getHandWinner();
+
+		// boolean for knowing if the game is finished
+		boolean gameDone = false;
+
+		// firstly we have to deal the cards if it is possible
+		if (DeckVector.isEmpty() && mPlayers[0].getCards().size() == 0)
+		{
+			gameDone = true;
+		}
+		else
+		{
+			dealCards(winner.getHandWinner());
+		}
+
+		// set the player that won to start the hand
+		// just for 2 players
+		if (winner.getHandWinner() == 0)
+		{
+			mPlayers[0].setNumberOfPoints(mPlayers[0].getNumberOfPoints() + winner.getNumberOfPointsWon());
+		}
+		else
+		{
+			mPlayers[1].setNumberOfPoints(mPlayers[1].getNumberOfPoints() + winner.getNumberOfPointsWon());
+		}
+
+		if (gameDone)
+		{
+			final int gameWinner = mTable.checkGameWinner(mPlayers).get(0);
+			Log.d("Septica", gameWinner + " winner");
+			((Activity) mContext).runOnUiThread(new Runnable()
+			{
+
+				@Override
+				public void run()
+				{
+					Toast.makeText(mContext, "Player " + gameWinner + " has won!", Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+		else
+		{
+			if (winner.getHandWinner() == 0)
+			{
+				mPlayers[0].setTurn(true);
+			}
+			else
+			{
+				mPlayers[1].setTurn(true);
+			}
+		}
+	}
+
+	public void finishHand(boolean player1WantsToSwipe)
+	{
+		if (player1WantsToSwipe && (mPlayers[mMyIndex].isTurn() == false))
+		{
+			// player1 can not finish the hand
+		}
+		else
+		{
+			if (mMyIndex == whichPlayerWasFirst)
 			{
 				mPlayers[0].setTurn(false);
 				mPlayers[1].setTurn(false);
@@ -183,7 +256,7 @@ public class GameThread extends Thread
 
 				// set the player that won to start the hand
 				// just for 2 players
-				if (winner.getHandWinner() == 1)
+				if (winner.getHandWinner() == 0)
 				{
 					mPlayers[0].setNumberOfPoints(mPlayers[0].getNumberOfPoints() + winner.getNumberOfPointsWon());
 				}
@@ -196,17 +269,19 @@ public class GameThread extends Thread
 				{
 					final int gameWinner = mTable.checkGameWinner(mPlayers).get(0);
 					Log.d("Septica", gameWinner + " winner");
-					((Activity) mContext).runOnUiThread(new Runnable() {
-						
+					((Activity) mContext).runOnUiThread(new Runnable()
+					{
+
 						@Override
-						public void run() {
+						public void run()
+						{
 							Toast.makeText(mContext, "Player " + gameWinner + " has won!", Toast.LENGTH_SHORT).show();
 						}
 					});
 				}
 				else
 				{
-					if (winner.getHandWinner() == 1)
+					if (winner.getHandWinner() == 0)
 					{
 						mPlayers[0].setTurn(true);
 					}
@@ -215,6 +290,7 @@ public class GameThread extends Thread
 						mPlayers[1].setTurn(true);
 					}
 				}
+				mUpdater.reportAction("!FinishHand!");
 			}
 		}
 	}
@@ -222,7 +298,7 @@ public class GameThread extends Thread
 	// just for 2 players
 	private void dealCards(int whichPlayerHasWon)
 	{
-		if (whichPlayerHasWon == 1)
+		if (whichPlayerHasWon == 0)
 		{
 			while (!DeckVector.isEmpty() && mPlayers[1].getCards().size() <= 3)
 			{
@@ -238,11 +314,6 @@ public class GameThread extends Thread
 				mPlayers[0].addCard(DeckVector.pop());
 			}
 		}
-	}
-
-	private int pseudoRandom()
-	{
-		return (int) (Math.random() * (mPlayers[0].getCards().size()));
 	}
 
 }
