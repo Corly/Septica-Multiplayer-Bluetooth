@@ -111,11 +111,11 @@ public class Table
 		int winner = whichPlayerWasFirst + whatCardWon % mNumberOfPlayers;
 		if (winner % mNumberOfPlayers == 0)
 		{
-			return new HandWinner(winner, numberOfPoints);
+			return new HandWinner(winner - 1, numberOfPoints);
 		}
 		else
 		{
-			return new HandWinner(winner % mNumberOfPlayers, numberOfPoints);
+			return new HandWinner(winner % mNumberOfPlayers - 1, numberOfPoints);
 		}
 	}
 
