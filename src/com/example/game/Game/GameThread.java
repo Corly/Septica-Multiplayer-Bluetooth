@@ -243,6 +243,7 @@ public class GameThread extends Thread
 				mPlayers[1].setTurn(false);
 				HandWinner winner = mTable.checkHandWinner(whichPlayerWasFirst);
 				whichPlayerWasFirst = winner.getHandWinner();
+				Log.d("Septica", "Who won? " + whichPlayerWasFirst);
 
 				// boolean for knowing if the game is finished
 				boolean gameDone = false;
