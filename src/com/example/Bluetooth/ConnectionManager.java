@@ -9,9 +9,9 @@ import android.util.Log;
 
 public class ConnectionManager extends AsyncTask<Void, String, Void>
 {
-	private final BluetoothSocket mSocket;
-	private final InputStream mInput;
-	private final OutputStream mOutput;
+	private BluetoothSocket mSocket;
+	private InputStream mInput;
+	private OutputStream mOutput;
 	private final UILink mLink;
 
 	public ConnectionManager(BluetoothSocket socket, UILink updater)
@@ -35,10 +35,10 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 
 	public Void doInBackground(Void... params)
 	{
-		
+
 		while (true)
 		{
-			Log.d("BLT","Looking for data..");
+			Log.d("BLT", "Looking for data..");
 			try
 			{
 				byte[] buf = new byte[1000];
@@ -50,8 +50,8 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 					Thread.sleep(20);
 					continue;
 				}
-				string = string.substring(0, index+1);
-				Log.d("BLT" , string);
+				string = string.substring(0, index + 1);
+				Log.d("BLT", string);
 				this.publishProgress(string);
 				Thread.sleep(20);
 			}
@@ -85,14 +85,40 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 
 	public void stop()
 	{
-		try
+		if (mInput != null)
 		{
-			mInput.close();
-			mOutput.close();
-			mSocket.close();
+			try
+			{
+				mInput.close();
+			}
+			catch (Exception e)
+			{
+			}
+			mInput = null;
 		}
-		catch (Exception e)
+
+		if (mOutput != null)
 		{
+			try
+			{
+				mOutput.close();
+			}
+			catch (Exception e)
+			{
+			}
+			mOutput = null;
+		}
+
+		if (mSocket != null)
+		{
+			try
+			{
+				mSocket.close();
+			}
+			catch (Exception e)
+			{
+			}
+			mSocket = null;
 		}
 	}
 }

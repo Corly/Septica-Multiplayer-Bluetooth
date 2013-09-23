@@ -52,7 +52,8 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 	protected Void doInBackground(Void... arg0)
 	{
 		BluetoothSocket socket = null;
-		if (mServerSocket == null) return null;
+		if (mServerSocket == null)
+			return null;
 		while (true)
 		{
 			try
@@ -69,7 +70,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 				try
 				{
 					mServerSocket.close();
-					mManager = new ConnectionManager(socket , mUpdater);
+					mManager = new ConnectionManager(socket, mUpdater);
 					mManager.execute();
 					this.publishProgress("!Start!");
 					break;
@@ -98,19 +99,29 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 			mUpdater.useData(strings);
 	}
 
-	public void closeSockets()
+	public void stopEverything()
 	{
-		try
+		if (mManager != null)
 		{
 			mManager.stop();
-			mServerSocket.close();
+			mManager = null;
 		}
-		catch (Exception er)
+		if (mServerSocket != null)
 		{
+			try
+			{
+				mServerSocket.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			mServerSocket = null;
 
 		}
+		this.cancel(true);
 	}
-	
+
 	public void write(String data)
 	{
 		mManager.write(data);

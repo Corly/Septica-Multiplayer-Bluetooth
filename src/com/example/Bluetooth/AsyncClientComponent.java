@@ -78,16 +78,14 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 			mUpdater.useData(strings);
 	}
 
-	public void closeSockets()
+	public void stopEverything()
 	{
-		try
+		if (mManager != null)
 		{
 			mManager.stop();
+			mManager = null;
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.cancel(true);
 	}
 
 	public void write(String data)

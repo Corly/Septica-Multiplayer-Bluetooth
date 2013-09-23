@@ -114,8 +114,7 @@ public class ClientGameActivity extends Activity
 	
 	public void onDestroy()
 	{
-		mClient.closeSockets();
-		mClient.cancel(true);
+		mClient.stopEverything();
 		super.onDestroy();
 	}
 

@@ -127,10 +127,8 @@ public class ServerGameActivity extends Activity
 	{
 		for (int i = 0; i < mServer.length; i++)
 		{
-			mServer[0].closeSockets();
-			mServer[0].cancel(true);
+			mServer[0].stopEverything();
 		}
-		//onSaveInstanceState(null);
 		super.onDestroy();
 	}
 
