@@ -174,7 +174,8 @@ public class GameThread extends Thread
 		mPlayers[1].setTurn(false);
 		HandWinner winner = mTable.checkHandWinner(whichPlayerWasFirst);
 		whichPlayerWasFirst = winner.getHandWinner();
-
+		Log.d("Septica", "Who won? " + whichPlayerWasFirst);
+		int winnerIndex = winner.getHandWinner();
 		// boolean for knowing if the game is finished
 		boolean gameDone = false;
 
@@ -188,16 +189,7 @@ public class GameThread extends Thread
 			dealCards(winner.getHandWinner());
 		}
 
-		// set the player that won to start the hand
-		// just for 2 players
-		if (winner.getHandWinner() == 0)
-		{
-			mPlayers[0].setNumberOfPoints(mPlayers[0].getNumberOfPoints() + winner.getNumberOfPointsWon());
-		}
-		else
-		{
-			mPlayers[1].setNumberOfPoints(mPlayers[1].getNumberOfPoints() + winner.getNumberOfPointsWon());
-		}
+		mPlayers[winnerIndex].setNumberOfPoints(mPlayers[winnerIndex].getNumberOfPoints() + winner.getNumberOfPointsWon());
 
 		if (gameDone)
 		{
@@ -215,14 +207,7 @@ public class GameThread extends Thread
 		}
 		else
 		{
-			if (winner.getHandWinner() == 0)
-			{
-				mPlayers[0].setTurn(true);
-			}
-			else
-			{
-				mPlayers[1].setTurn(true);
-			}
+			mPlayers[winnerIndex].setTurn(true);
 		}
 	}
 
@@ -239,12 +224,13 @@ public class GameThread extends Thread
 		{
 			if (mMyIndex == whichPlayerWasFirst)
 			{
+				mUpdater.reportAction("!FinishHand!");
 				mPlayers[0].setTurn(false);
 				mPlayers[1].setTurn(false);
 				HandWinner winner = mTable.checkHandWinner(whichPlayerWasFirst);
 				whichPlayerWasFirst = winner.getHandWinner();
 				Log.d("Septica", "Who won? " + whichPlayerWasFirst);
-
+				int winnerIndex = winner.getHandWinner();
 				// boolean for knowing if the game is finished
 				boolean gameDone = false;
 
@@ -258,16 +244,7 @@ public class GameThread extends Thread
 					dealCards(winner.getHandWinner());
 				}
 
-				// set the player that won to start the hand
-				// just for 2 players
-				if (winner.getHandWinner() == 0)
-				{
-					mPlayers[0].setNumberOfPoints(mPlayers[0].getNumberOfPoints() + winner.getNumberOfPointsWon());
-				}
-				else
-				{
-					mPlayers[1].setNumberOfPoints(mPlayers[1].getNumberOfPoints() + winner.getNumberOfPointsWon());
-				}
+				mPlayers[winnerIndex].setNumberOfPoints(mPlayers[winnerIndex].getNumberOfPoints() + winner.getNumberOfPointsWon());
 
 				if (gameDone)
 				{
@@ -285,16 +262,8 @@ public class GameThread extends Thread
 				}
 				else
 				{
-					if (winner.getHandWinner() == 0)
-					{
-						mPlayers[0].setTurn(true);
-					}
-					else
-					{
-						mPlayers[1].setTurn(true);
-					}
+					mPlayers[winnerIndex].setTurn(true);
 				}
-				mUpdater.reportAction("!FinishHand!");
 			}
 		}
 	}

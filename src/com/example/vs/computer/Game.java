@@ -1,8 +1,8 @@
 package com.example.vs.computer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,7 +17,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import com.example.deck.DeckVector;
 import com.example.game.bot.PlayedCardsTwo;
 import com.example.players.Players;
@@ -99,6 +98,7 @@ public class Game extends Activity
 
 	private Handler handler;
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

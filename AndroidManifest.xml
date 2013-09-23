@@ -28,8 +28,10 @@
         </activity>
         <activity
             android:name="com.example.vs.computer.Game"
+	        android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="landscape" >
-        	android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        	android:theme="@android:style/Theme.NoTitleBar.Fullscreen" 
+        	>
         </activity>
         <activity
             android:name="com.example.septica_multiplayer_bluetooth.ServerGameActivity"
@@ -44,7 +46,7 @@
         </activity>
         <activity
             android:name="com.example.septica_multiplayer_bluetooth.ClientGameActivity"
-            android:label="@string/title_activity_client_game" 
+            android:label="@string/title_activity_client_game"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
     </application>

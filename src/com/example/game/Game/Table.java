@@ -66,7 +66,8 @@ public class Table
 	{
 		// note that 2 is hard-coded -- it represents the number of cards that
 		// are played in one circle
-		// ex for 2 is 2, for 3 is 3, for 4 is for (cel mai epic comentariu 2 este 2 , 3 este 3 , 4 este 4 :)))))) =)))) )
+		// ex for 2 is 2, for 3 is 3, for 4 is for (cel mai epic comentariu 2
+		// este 2 , 3 este 3 , 4 este 4 :)))))) =)))) )
 		if (mCount != 0 && mCount % 2 == 0 && !mCards[0].getNumber().contentEquals(card.getNumber()) && !card.getNumber().contentEquals("7"))
 		{
 			return false;
@@ -109,14 +110,7 @@ public class Table
 		this.clear();
 
 		int winner = whichPlayerWasFirst + whatCardWon % mNumberOfPlayers;
-		if (winner % mNumberOfPlayers == 0)
-		{
-			return new HandWinner(winner, numberOfPoints);
-		}
-		else
-		{
-			return new HandWinner(winner % mNumberOfPlayers, numberOfPoints);
-		}
+		return new HandWinner(winner % mNumberOfPlayers, numberOfPoints);
 	}
 
 	// return an arraylist with the winners
