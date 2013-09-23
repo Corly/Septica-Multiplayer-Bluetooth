@@ -98,6 +98,7 @@ public class ServerGameActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		//onRestoreInstanceState(savedInstanceState);
 		mGameSheet = new GameSheet(this);
 		setContentView(mGameSheet);
 		mContext = this;
@@ -129,6 +130,7 @@ public class ServerGameActivity extends Activity
 			mServer[0].closeSockets();
 			mServer[0].cancel(true);
 		}
+		//onSaveInstanceState(null);
 		super.onDestroy();
 	}
 

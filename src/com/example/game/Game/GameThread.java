@@ -228,6 +228,9 @@ public class GameThread extends Thread
 
 	public void finishHand(boolean player1WantsToSwipe)
 	{
+		Log.d("Septica", "Player 1 wants to swipe: " + player1WantsToSwipe);
+		Log.d("Septica", "Player " + mMyIndex + " is turn? " + mPlayers[mMyIndex].isTurn());
+		Log.d("Septica", "mMyIndex = " + mMyIndex + " and whichPlayerWasFirst = " + whichPlayerWasFirst);
 		if (player1WantsToSwipe && (mPlayers[mMyIndex].isTurn() == false))
 		{
 			// player1 can not finish the hand
