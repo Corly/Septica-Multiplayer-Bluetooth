@@ -30,7 +30,7 @@ public class ClientGameActivity extends Activity
 	private AlertDialog mAlertDialog;
 	private TextView mAlertDialogText;
 	private Context mContext;
-	
+
 	private UILink mUpdater = new UILink()
 	{
 		@Override
@@ -42,12 +42,15 @@ public class ClientGameActivity extends Activity
 			}
 			if (args[0].contains("Start"))
 			{
-				mAlertDialog.dismiss();
-				String[] arguments = args[0].substring(0,args[0].length()-1).split(" ");
+				if (mAlertDialog.isShowing())
+				{
+					mAlertDialog.dismiss();
+				}
+				String[] arguments = args[0].substring(0, args[0].length() - 1).split(" ");
 				String[] cardArray = arguments[2].split(",");
-				Log.d("BLT",cardArray.length+"");
+				Log.d("BLT", cardArray.length + "");
 				DeckVector.initFromNames(cardArray, mContext);
-				mGameSheet.startGame(Integer.parseInt(arguments[1]) , this);
+				mGameSheet.startGame(Integer.parseInt(arguments[1]), this);
 			}
 			if (args[0].equals("!Connection error!"))
 			{
@@ -71,39 +74,41 @@ public class ClientGameActivity extends Activity
 		{
 			mClient.write(args[0]);
 		}
-		
+
 	};
-	
+
 	private void buildDialog()
-	{	    
-	    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ClientGameActivity.this);
-	    LayoutInflater inflater = getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.dialog, (ViewGroup) getCurrentFocus());
-        
-        alertBuilder.setView(dialoglayout);
-	    alertBuilder.setOnCancelListener(new OnCancelListener() {
-			
+	{
+		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ClientGameActivity.this);
+		LayoutInflater inflater = getLayoutInflater();
+		View dialoglayout = inflater.inflate(R.layout.dialog, (ViewGroup) getCurrentFocus());
+
+		alertBuilder.setView(dialoglayout);
+		alertBuilder.setOnCancelListener(new OnCancelListener()
+		{
+
 			@Override
-			public void onCancel(DialogInterface dialog) {
+			public void onCancel(DialogInterface dialog)
+			{
 				finish();
 			}
 		});
-	    mAlertDialog = alertBuilder.create();
-	    mAlertDialog.show();
-	    
-	    mAlertDialogText = (TextView)mAlertDialog.findViewById(R.id.alertTextview);
-	    mAlertDialogText.setText("Connecting to " + mDeviceToConnect.getName() + "..");
+		mAlertDialog = alertBuilder.create();
+		mAlertDialog.show();
+
+		mAlertDialogText = (TextView) mAlertDialog.findViewById(R.id.alertTextview);
+		mAlertDialogText.setText("Connecting to " + mDeviceToConnect.getName() + "..");
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		mGameSheet = new GameSheet(this);
 		setContentView(mGameSheet);
-		mContext = this;
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		mContext = this;
 		Bundle extras = this.getIntent().getExtras();
 		mDeviceIndex = extras.getInt("index");
 		mDeviceToConnect = DevicesActivity.getDevice(mDeviceIndex);
@@ -111,7 +116,7 @@ public class ClientGameActivity extends Activity
 		mClient.execute();
 		buildDialog();
 	}
-	
+
 	public void onDestroy()
 	{
 		mClient.stopEverything();

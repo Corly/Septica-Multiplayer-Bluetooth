@@ -58,6 +58,10 @@ public class ServerGameActivity extends Activity
 			{
 				mGameSheet.sendFinishHand();
 			}
+			if (args[0].contains("has connected"))
+			{
+				
+			}
 		}
 
 		@Override
@@ -101,9 +105,9 @@ public class ServerGameActivity extends Activity
 		//onRestoreInstanceState(savedInstanceState);
 		mGameSheet = new GameSheet(this);
 		setContentView(mGameSheet);
-		mContext = this;
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		mContext = this;
 
 		for (int i = 0; i < mServer.length; i++)
 		{

@@ -36,7 +36,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 	public Void doInBackground(Void... params)
 	{
 
-		while (true)
+		while (!isCancelled())
 		{
 			Log.d("BLT", "Looking for data..");
 			try

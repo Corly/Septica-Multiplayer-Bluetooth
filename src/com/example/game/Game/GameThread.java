@@ -52,11 +52,6 @@ public class GameThread extends Thread
 		}
 		mPlayers[0].setTurn(true);
 
-		// player1's turn
-		whichPlayerWasFirst = 0;
-
-		// player2 not turn
-
 		// table dimension
 		mTable = new Table(2);
 
@@ -145,13 +140,12 @@ public class GameThread extends Thread
 				{
 					mPlayers[mMyIndex].removeCard(result);
 					mPlayers[mMyIndex].setTurn(false);
-					mPlayers[(mMyIndex + 1) % 2].setTurn(true); // 2 is the number of players
+					mPlayers[(mMyIndex + 1) % mPlayers.length].setTurn(true);
 					mUpdater.reportAction("!Updatecards " + mMyIndex + " " + result + "!");
-
 				}
 				else
 				{
-					Toast.makeText(mContext, "Illegal move", 1).show();
+					Toast.makeText(mContext, "Illegal move", Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
@@ -163,7 +157,7 @@ public class GameThread extends Thread
 		if (mTable.addToTable(mPlayers[playerIndex].getCard(cardIndex)))
 		{
 			mPlayers[playerIndex].removeCard(cardIndex);
-			mPlayers[(playerIndex + 1) % 2].setTurn(true); // 2 is the number of players
+			mPlayers[(playerIndex + 1) % mPlayers.length].setTurn(true);
 			mPlayers[playerIndex].setTurn(false);
 		}
 	}
@@ -271,7 +265,7 @@ public class GameThread extends Thread
 	// just for 2 players
 	private void dealCards(int whichPlayerHasWon)
 	{
-		if (whichPlayerHasWon == 0)
+		/*if (whichPlayerHasWon == 0)
 		{
 			while (!DeckVector.isEmpty() && mPlayers[1].getCards().size() <= 3)
 			{
@@ -287,6 +281,17 @@ public class GameThread extends Thread
 				mPlayers[0].addCard(DeckVector.pop());
 			}
 		}
+		*/
+		while(!DeckVector.isEmpty() && mPlayers[whichPlayerHasWon].getCards().size() <= 3)
+		{
+			int index = whichPlayerHasWon;
+			for (int i = 0;i<mPlayers.length;i++,index++,index %= mPlayers.length)
+			{
+				mPlayers[index].addCard(DeckVector.pop());
+			}
+		}
+		
+		
 	}
 
 }
