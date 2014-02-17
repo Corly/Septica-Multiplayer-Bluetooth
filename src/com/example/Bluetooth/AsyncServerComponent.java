@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 
 public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 {
@@ -93,13 +92,13 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 		return null;
 	}
 
-	protected void onProgressUpdate(String... strings)
+	protected synchronized void onProgressUpdate(String... strings)
 	{
 		if (mUpdater != null)
 			mUpdater.useData(strings);
 	}
 
-	public void stopEverything()
+	public synchronized void stopEverything()
 	{
 		if (mManager != null)
 		{
@@ -122,7 +121,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 		this.cancel(true);
 	}
 
-	public void write(String data)
+	public synchronized void write(String data)
 	{
 		mManager.write(data);
 	}

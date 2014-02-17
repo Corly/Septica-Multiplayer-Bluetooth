@@ -1,5 +1,7 @@
 package com.example.Bluetooth;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -10,8 +12,8 @@ import android.util.Log;
 public class ConnectionManager extends AsyncTask<Void, String, Void>
 {
 	private BluetoothSocket mSocket;
-	private InputStream mInput;
-	private OutputStream mOutput;
+	private DataInputStream mInput;
+	private DataOutputStream mOutput;
 	private final UILink mLink;
 
 	public ConnectionManager(BluetoothSocket socket, UILink updater)
@@ -29,8 +31,8 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		{
 			Log.d("BLT", "Couldn't obtain the streams from socket!");
 		}
-		mInput = tmpInput;
-		mOutput = tmpOutput;
+		mInput = new DataInputStream(tmpInput);
+		mOutput = new DataOutputStream(tmpOutput);
 	}
 
 	public Void doInBackground(Void... params)
@@ -41,18 +43,9 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 			Log.d("BLT", "Looking for data..");
 			try
 			{
-				byte[] buf = new byte[1000];
-				int bytes = mInput.read(buf);
-				String string = new String(buf);
-				int index = string.lastIndexOf("!");
-				if (index == -1)
-				{
-					Thread.sleep(20);
-					continue;
-				}
-				string = string.substring(0, index + 1);
-				Log.d("BLT", string);
-				this.publishProgress(string);
+				String readString = mInput.readUTF();
+				if (readString != null)
+					this.publishProgress(readString);
 				Thread.sleep(20);
 			}
 			catch (Exception er)
@@ -64,26 +57,26 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		return null;
 	}
 
-	protected void onProgressUpdate(String... strings)
+	protected synchronized void onProgressUpdate(String... strings)
 	{
 		if (mLink != null)
 			mLink.useData(strings);
 	}
 
-	public void write(String data)
+	public synchronized void write(String data)
 	{
 		try
 		{
-			mOutput.write(data.getBytes());
+			mOutput.writeUTF(data);
 			mOutput.flush();
 		}
 		catch (Exception er)
 		{
-
+			
 		}
 	}
 
-	public void stop()
+	public synchronized void stop()
 	{
 		if (mInput != null)
 		{

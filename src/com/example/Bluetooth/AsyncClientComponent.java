@@ -1,8 +1,6 @@
 package com.example.Bluetooth;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothDevice;
@@ -72,13 +70,13 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 		return null;
 	}
 
-	public void onProgressUpdate(String... strings)
+	protected synchronized void onProgressUpdate(String... strings)
 	{
 		if (mUpdater != null)
 			mUpdater.useData(strings);
 	}
 
-	public void stopEverything()
+	public synchronized void stopEverything()
 	{
 		if (mManager != null)
 		{
@@ -88,8 +86,9 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 		this.cancel(true);
 	}
 
-	public void write(String data)
+	public synchronized void write(String data)
 	{
-		mManager.write(data);
+		if (mManager != null)
+			mManager.write(data);
 	}
 }

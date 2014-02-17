@@ -25,6 +25,12 @@ public class MainActivity extends Activity
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		mContext = this;
 		mBltAdapter = BluetoothAdapter.getDefaultAdapter();
+		
+		if (mBltAdapter == null)
+		{
+			return;
+		}
+		
 		if (!mBltAdapter.isEnabled())
 		{
 			// check if the bluetooth is enabled
