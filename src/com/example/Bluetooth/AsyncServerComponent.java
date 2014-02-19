@@ -30,16 +30,18 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 		if (mBltAdapter.isEnabled())
 		{
-			Intent discoverable = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverable.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+			Intent discoverable = new Intent(
+					BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+			discoverable.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
+					300);
 			mContext.startActivity(discoverable);
 		}
 		try
 		{
-			tmp = mBltAdapter.listenUsingRfcommWithServiceRecord("BLT", UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+			tmp = mBltAdapter.listenUsingRfcommWithServiceRecord("BLT",
+					UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
 
-		}
-		catch (IOException er)
+		} catch (IOException er)
 		{
 
 		}
@@ -51,15 +53,16 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 	protected Void doInBackground(Void... arg0)
 	{
 		BluetoothSocket socket = null;
+
 		if (mServerSocket == null)
 			return null;
-		while (true)
+
+		while (!isCancelled())
 		{
 			try
 			{
 				socket = mServerSocket.accept();
-			}
-			catch (IOException e)
+			} catch (IOException e)
 			{
 				e.printStackTrace();
 				break;
@@ -73,8 +76,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 					mManager.execute();
 					this.publishProgress("!Start!");
 					break;
-				}
-				catch (IOException e)
+				} catch (Exception e)
 				{
 					break;
 				}
@@ -82,8 +84,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 			try
 			{
 				Thread.sleep(20);
-			}
-			catch (InterruptedException e)
+			} catch (InterruptedException e)
 			{
 				e.printStackTrace();
 			}
@@ -100,29 +101,26 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 	public synchronized void stopEverything()
 	{
-		if (mManager != null)
+		try
 		{
 			mManager.stop();
 			mManager = null;
-		}
-		if (mServerSocket != null)
+		} catch (Exception er)
+		{}
+		
+		try
 		{
-			try
-			{
-				mServerSocket.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			mServerSocket = null;
-
-		}
+			mServerSocket.close();
+			mManager = null;
+		} catch (Exception er)
+		{}
+		
 		this.cancel(true);
 	}
 
 	public synchronized void write(String data)
 	{
-		mManager.write(data);
+		if (mManager != null)
+			mManager.write(data);
 	}
 }

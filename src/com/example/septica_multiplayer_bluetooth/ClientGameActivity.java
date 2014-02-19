@@ -44,7 +44,14 @@ public class ClientGameActivity extends Activity
 			{
 				if (mAlertDialog.isShowing())
 				{
-					mAlertDialog.dismiss();
+					try
+					{
+						mAlertDialog.dismiss();
+					}
+					catch(Exception er)
+					{
+						
+					}
 				}
 				String[] arguments = args[0].substring(0, args[0].length() - 1).split(" ");
 				String[] cardArray = arguments[2].split(",");

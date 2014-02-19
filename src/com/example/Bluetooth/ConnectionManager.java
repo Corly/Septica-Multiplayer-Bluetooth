@@ -26,8 +26,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		{
 			tmpInput = mSocket.getInputStream();
 			tmpOutput = mSocket.getOutputStream();
-		}
-		catch (Exception er)
+		} catch (Exception er)
 		{
 			Log.d("BLT", "Couldn't obtain the streams from socket!");
 		}
@@ -37,7 +36,6 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 
 	public Void doInBackground(Void... params)
 	{
-
 		while (!isCancelled())
 		{
 			Log.d("BLT", "Looking for data..");
@@ -47,13 +45,13 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 				if (readString != null)
 					this.publishProgress(readString);
 				Thread.sleep(20);
-			}
-			catch (Exception er)
+			} catch (Exception er)
 			{
 				Log.d("BLT", er.getMessage());
 				break;
 			}
 		}
+		
 		return null;
 	}
 
@@ -69,49 +67,37 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		{
 			mOutput.writeUTF(data);
 			mOutput.flush();
-		}
-		catch (Exception er)
-		{
-			
-		}
+		} catch (Exception er)
+		{}
 	}
 
 	public synchronized void stop()
 	{
-		if (mInput != null)
+
+		try
 		{
-			try
-			{
-				mInput.close();
-			}
-			catch (Exception e)
-			{
-			}
+			mInput.close();
 			mInput = null;
-		}
+			
+		} 
+		catch (Exception e)
+		{}
 
-		if (mOutput != null)
+		try
 		{
-			try
-			{
-				mOutput.close();
-			}
-			catch (Exception e)
-			{
-			}
+			mOutput.close();
 			mOutput = null;
-		}
-
-		if (mSocket != null)
+			
+		} catch (Exception e)
+		{}
+		try
 		{
-			try
-			{
-				mSocket.close();
-			}
-			catch (Exception e)
-			{
-			}
+			mSocket.close();
 			mSocket = null;
-		}
+		} catch (Exception e)
+		{}
+		
+		this.cancel(true);
+		
 	}
 }

@@ -33,7 +33,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 	protected Void doInBackground(Void... params)
 	{
 		int num_errors = 0;
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 10 && !isCancelled(); i++)
 		{
 			try
 			{
@@ -48,18 +48,17 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 				continue;
 			}
 		}
-		if (num_errors == 10)
+		
+		
+		if (num_errors == 10 || isCancelled())
 		{
 			this.publishProgress("!Connection error!");
 			try
 			{
 				mDataSocket.close();
 			}
-			catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			catch (Exception e)
+			{}
 			return null;
 		}
 		mManager = new ConnectionManager(mDataSocket, mUpdater);
@@ -78,11 +77,14 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 
 	public synchronized void stopEverything()
 	{
-		if (mManager != null)
+		try
 		{
 			mManager.stop();
 			mManager = null;
 		}
+		catch (Exception err)
+		{}
+		
 		this.cancel(true);
 	}
 
