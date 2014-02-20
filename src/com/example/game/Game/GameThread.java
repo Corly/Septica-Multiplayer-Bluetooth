@@ -265,23 +265,7 @@ public class GameThread extends Thread
 	// just for 2 players
 	private void dealCards(int whichPlayerHasWon)
 	{
-		/*if (whichPlayerHasWon == 0)
-		{
-			while (!DeckVector.isEmpty() && mPlayers[1].getCards().size() <= 3)
-			{
-				mPlayers[0].addCard(DeckVector.pop());
-				mPlayers[1].addCard(DeckVector.pop());
-			}
-		}
-		else
-		{
-			while (!DeckVector.isEmpty() && mPlayers[0].getCards().size() <= 3)
-			{
-				mPlayers[1].addCard(DeckVector.pop());
-				mPlayers[0].addCard(DeckVector.pop());
-			}
-		}
-		*/
+		
 		while(!DeckVector.isEmpty() && mPlayers[whichPlayerHasWon].getCards().size() <= 3)
 		{
 			int index = whichPlayerHasWon;

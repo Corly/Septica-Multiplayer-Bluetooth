@@ -45,7 +45,16 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 				Log.d("BLT", connectEr.getMessage());
 				this.publishProgress("Connection to " + mDataSocket.getRemoteDevice().getName() + " has failed!");
 				num_errors++;
+				try
+				{
+					Thread.sleep(300);
+				} catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				continue;
+				
 			}
 		}
 		
