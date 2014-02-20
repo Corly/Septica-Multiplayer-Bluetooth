@@ -17,7 +17,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import com.example.deck.DeckVector;
+
+import com.example.game.Game.DeckVector;
 import com.example.game.bot.PlayedCardsTwo;
 import com.example.players.Players;
 import com.example.septica_multiplayer_bluetooth.R;
@@ -220,13 +221,13 @@ public class Game extends Activity
 		{
 		case 2:
 			// Shuffle the cards :D
-			DeckVector.init();
-			DeckVector.shuffle();
+			//DeckVector.init();
+			//DeckVector.shuffle();
 
 			for (int i = 0; i < 4; i++)
 			{
-				Players.addToPlayer1(DeckVector.pop());
-				Players.addToPlayer2(DeckVector.pop());
+				//Players.addToPlayer1(DeckVector.pop());
+				//Players.addToPlayer2(DeckVector.pop());
 			}
 
 			playedCardPosition = 5;
@@ -794,15 +795,15 @@ public class Game extends Activity
 
 		case 3:
 			// Shuffle the cards :D
-			DeckVector.init();
-			DeckVector.size = 30;
-			DeckVector.shuffle();
+			//DeckVector.init();
+		//	DeckVector.size = 30;
+			//DeckVector.shuffle();
 
 			for (int i = 0; i < 4; i++)
 			{
-				Players.addToPlayer1(DeckVector.pop());
-				Players.addToPlayer2(DeckVector.pop());
-				Players.addToPlayer3(DeckVector.pop());
+			//	Players.addToPlayer1(DeckVector.pop());
+				//Players.addToPlayer2(DeckVector.pop());
+				//Players.addToPlayer3(DeckVector.pop());
 			}
 
 			myCard1.setBackgroundResource(nameToId(Players.player1[0]));
@@ -827,15 +828,15 @@ public class Game extends Activity
 
 		case 4:
 			// Shuffle the cards :D
-			DeckVector.init();
-			DeckVector.shuffle();
+		//	DeckVector.init();
+			//DeckVector.shuffle();
 
 			for (int i = 0; i < 4; i++)
 			{
-				Players.addToPlayer1(DeckVector.pop());
-				Players.addToPlayer2(DeckVector.pop());
-				Players.addToPlayer3(DeckVector.pop());
-				Players.addToPlayer4(DeckVector.pop());
+				//Players.addToPlayer1(DeckVector.pop());
+				//Players.addToPlayer2(DeckVector.pop());
+				//Players.addToPlayer3(DeckVector.pop());
+				//Players.addToPlayer4(DeckVector.pop());
 			}
 
 			myCard1.setBackgroundResource(nameToId(Players.player1[0]));
@@ -1197,7 +1198,7 @@ public class Game extends Activity
 			{
 				for (int i = 3 - cardsInHand; i >= 0; i--)
 				{
-					Players.player1[i] = DeckVector.pop();
+				//	Players.player1[i] = DeckVector.pop();
 				}
 
 				int left;
