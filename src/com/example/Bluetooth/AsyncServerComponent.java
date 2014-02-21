@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 {
@@ -89,7 +90,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 				e.printStackTrace();
 			}
 		}
-
+		Log.d("BLT","AsyncServerComponent Task stopped succesfully!");
 		return null;
 	}
 
@@ -111,7 +112,6 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 		try
 		{
 			mServerSocket.close();
-			mManager = null;
 		} catch (Exception er)
 		{}
 		

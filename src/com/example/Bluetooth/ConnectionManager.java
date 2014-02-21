@@ -51,7 +51,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 				break;
 			}
 		}
-		
+		Log.d("BLT","Connection Manager stopped successfully!");
 		return null;
 	}
 
@@ -77,7 +77,6 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		try
 		{
 			mInput.close();
-			mInput = null;
 			
 		} 
 		catch (Exception e)
@@ -86,14 +85,12 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		try
 		{
 			mOutput.close();
-			mOutput = null;
 			
 		} catch (Exception e)
 		{}
 		try
 		{
 			mSocket.close();
-			mSocket = null;
 		} catch (Exception e)
 		{}
 		

@@ -62,12 +62,17 @@ public class DevicesActivity extends Activity
 
 	};
 
-	public static BluetoothDevice getDevice(int index)
+	public synchronized static BluetoothDevice getDevice(int index)
 	{
 		return mManager.getDevice(index);
 	}
+	
+	public synchronized static void stopDiscovery()
+	{
+		mManager.stopDiscovery();
+	}
 
-	public void onDestroy()
+	public synchronized void onDestroy()
 	{
 		mManager.stopDiscovery();
 		mManager.destroy();

@@ -15,12 +15,13 @@ import android.widget.ArrayAdapter;
 
 public class BluetoothManager
 {
-	private BluetoothAdapter mBluetoothAdapter;
-	private Context mContext;
-	private ArrayAdapter<String> mList;
-	private ArrayList<BluetoothDevice> mFoundDevices;
-	private HashMap<String, Integer> mHash;
+	private final BluetoothAdapter mBluetoothAdapter;
+	private final Context mContext;
+	private final ArrayAdapter<String> mList;
+	private final ArrayList<BluetoothDevice> mFoundDevices;
+	private final HashMap<String, Integer> mHash;
 	private boolean mDiscover;
+	private final IntentFilter mFilter1 , mFilter2;
 
 	public BluetoothManager(Context context, ArrayAdapter<String> list)
 	{
@@ -29,6 +30,8 @@ public class BluetoothManager
 		mFoundDevices = new ArrayList<BluetoothDevice>();
 		mHash = new HashMap<String, Integer>();
 		this.mList = list;
+		mFilter1  = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		mFilter2 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
 	}
 
 	public boolean checkDevices()
@@ -57,10 +60,8 @@ public class BluetoothManager
 		}
 		mBluetoothAdapter.startDiscovery();
 		mDiscover = true;
-		IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		IntentFilter filter2 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		mContext.registerReceiver(mFoundReceiver, filter1);
-		mContext.registerReceiver(mFoundReceiver, filter2);
+		mContext.registerReceiver(mFoundReceiver, mFilter1);
+		mContext.registerReceiver(mFoundReceiver, mFilter2);
 		return true;
 	}
 
@@ -106,17 +107,34 @@ public class BluetoothManager
 
 	public void stopDiscovery()
 	{
-		mBluetoothAdapter.cancelDiscovery();
-		mDiscover = false;
+		try
+		{
+			mBluetoothAdapter.cancelDiscovery();
+			mDiscover = false;
+			mContext.unregisterReceiver(mFoundReceiver);
+		}
+		catch(Exception er)
+		{
+			
+		}
 	}
 
 	public void destroy()
 	{
-		mBluetoothAdapter.cancelDiscovery();
-		mDiscover = false;
-		mFoundDevices.clear();
-		mList.clear();
-		mHash.clear();
+		try
+		{
+			mBluetoothAdapter.cancelDiscovery();
+			mDiscover = false;
+			mFoundDevices.clear();
+			mList.clear();
+			mHash.clear();
+			mContext.unregisterReceiver(mFoundReceiver);
+		}
+		catch(Exception er)
+		{
+			
+		}
+		
 	}
 
 	public BluetoothDevice getDevice(int index)

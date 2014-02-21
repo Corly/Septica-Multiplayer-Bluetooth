@@ -3,6 +3,8 @@ package com.example.Bluetooth;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.example.septica_multiplayer_bluetooth.DevicesActivity;
+
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
@@ -74,7 +76,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 		mManager.execute();
 		this.publishProgress("!Connection established!");
 		Log.d("BLT", "Connection established to " + mDataSocket.getRemoteDevice().getName());
-
+		
 		return null;
 	}
 
