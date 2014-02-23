@@ -6,16 +6,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.example.Bluetooth.AsyncServerComponent;
 import com.example.Bluetooth.UILink;
@@ -38,7 +39,7 @@ public class ServerGameActivity extends Activity
 		{
 			if (args[0].equals("!Start!"))
 			{
-				mAlertDialog.dismiss();
+				//mAlertDialog.dismiss();
 				DeckVector.init(mContext);
 				DeckVector.shuffle();
 				for (int i = 0; i < mServer.length; i++)
@@ -103,19 +104,29 @@ public class ServerGameActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		//onRestoreInstanceState(savedInstanceState);
-		mGameSheet = new GameSheet(this);
-		setContentView(mGameSheet);
+		setContentView(R.layout.activity_game);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		mContext = this;
 
-		for (int i = 0; i < mServer.length; i++)
-		{
-			mServer[0] = new AsyncServerComponent(this, mUILink);
-			mServer[0].execute();
-		}
-		buildDialog();
-
+		//for (int i = 0; i < mServer.length; i++)
+		//{
+		mServer[0] = new AsyncServerComponent(this, mUILink);
+		mServer[0].execute();
+		//}
+		//buildDialog();
+		final ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper_server);
+		Button startButton = (Button) findViewById(R.id.button_server_start);
+		startButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				viewFlipper.showNext();
+				mGameSheet = (GameSheet) findViewById(R.id.serverGameSheet);
+				//mServer[0].execute();
+				mServer[0].startGame();
+			}
+		});
 	}
 
 	@Override
