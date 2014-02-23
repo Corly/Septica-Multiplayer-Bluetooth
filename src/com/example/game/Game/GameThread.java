@@ -110,25 +110,24 @@ public class GameThread extends Thread
 			}
 		}
 		Log.d("Septica", "Game has stopped! ");
-
 	}
 
-	public void stopRunning()
+	public synchronized void stopRunning()
 	{
 		mRunning = false;
 	}
 
-	public void Pause()
+	public synchronized void Pause()
 	{
 		mPaused = true;
 	}
 
-	public void Unpause()
+	public synchronized void Unpause()
 	{
 		mPaused = false;
 	}
 
-	public boolean handleTouch(MotionEvent event)
+	public synchronized boolean handleTouch(MotionEvent event)
 	{
 
 		if (mPlayers[mMyIndex].isTurn())
@@ -152,7 +151,7 @@ public class GameThread extends Thread
 		return true;
 	}
 
-	public void updateCards(int playerIndex, int cardIndex)
+	public synchronized void updateCards(int playerIndex, int cardIndex)
 	{
 		if (mTable.addToTable(mPlayers[playerIndex].getCard(cardIndex)))
 		{
@@ -162,7 +161,7 @@ public class GameThread extends Thread
 		}
 	}
 	
-	public void sendFinishHand()
+	public synchronized void sendFinishHand()
 	{
 		mPlayers[0].setTurn(false);
 		mPlayers[1].setTurn(false);
@@ -205,7 +204,7 @@ public class GameThread extends Thread
 		}
 	}
 
-	public void finishHand(boolean player1WantsToSwipe)
+	public synchronized void finishHand(boolean player1WantsToSwipe)
 	{
 		Log.d("Septica", "Player 1 wants to swipe: " + player1WantsToSwipe);
 		Log.d("Septica", "Player " + mMyIndex + " is turn? " + mPlayers[mMyIndex].isTurn());
