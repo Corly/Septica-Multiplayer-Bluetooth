@@ -3,6 +3,10 @@ package com.example.Bluetooth;
 import java.io.IOException;
 import java.util.UUID;
 
+import com.example.septica_multiplayer_bluetooth.R;
+import com.example.septica_multiplayer_bluetooth.ServerGameActivity;
+
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -10,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Button;
 
 public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 {
@@ -57,7 +62,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 		if (mServerSocket == null)
 			return null;
-
+		
 		while (!isCancelled())
 		{
 			try
@@ -75,7 +80,15 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 					mServerSocket.close();
 					mManager = new ConnectionManager(socket, mUpdater);
 					mManager.execute();
-					this.publishProgress("!Start!");
+					((ServerGameActivity) mContext).runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							Button button = (Button) ((Activity) mContext).findViewById(R.id.button_server_start);
+							button.setEnabled(true);
+						}
+					});
+					//this.publishProgress("!Start!");
 					break;
 				} catch (Exception e)
 				{
@@ -122,5 +135,9 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 	{
 		if (mManager != null)
 			mManager.write(data);
+	}
+	
+	public synchronized void startGame() {
+		this.publishProgress("!Start!");
 	}
 }
