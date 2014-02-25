@@ -49,7 +49,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		mIsRunning = true;
 
 		boolean receivedExpectedPing = false;
-		double timePassedInSeconds = 0;
+		int timePassedInSeconds = 0;
 
 		while (mIsRunning && mIsConnected)
 		{
@@ -64,7 +64,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 						if (readString.equals("!Ping!"))
 						{
 							receivedExpectedPing = true;
-							timePassedInSeconds = 0.0;
+							timePassedInSeconds = 0;
 							Log.d("BLT", "Received ping from " + mDeviceName + "!");
 						}
 						this.publishProgress(readString);
@@ -73,7 +73,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 
 				if (receivedExpectedPing)
 				{
-					if (timePassedInSeconds == 1.0)
+					if (timePassedInSeconds == 50)
 					{
 						write("!Ping!");
 						receivedExpectedPing = false;
@@ -82,14 +82,14 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 					}
 				} else
 				{
-					if (timePassedInSeconds > 2.0)
+					if (timePassedInSeconds > 100)
 					{
 						mIsConnected = false;
 						Log.d("BLT", "Device " + mDeviceName + " is gone!");
 					}
 				}
 
-				timePassedInSeconds += 0.05;
+				timePassedInSeconds ++;
 				Thread.sleep(20);
 			} catch (Exception er)
 			{
