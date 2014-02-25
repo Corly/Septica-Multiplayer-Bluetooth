@@ -26,7 +26,7 @@ import com.example.game.Game.GameSheet;
 public class ServerGameActivity extends Activity
 {
 	private GameSheet mGameSheet;
-	private AsyncServerComponent[] mServer = new AsyncServerComponent[1];
+	private AsyncServerComponent mServer;
 	private AlertDialog mAlertDialog;
 	private TextView mAlertDialogText;
 	private Context mContext;
@@ -39,13 +39,9 @@ public class ServerGameActivity extends Activity
 		{
 			if (args[0].equals("!Start!"))
 			{
-				//mAlertDialog.dismiss();
 				DeckVector.init(mContext);
-				DeckVector.shuffle();
-				for (int i = 0; i < mServer.length; i++)
-				{
-					mServer[i].write("!Start " + (i + 1) + " " + DeckVector.getCardsInOrder() + "!");
-				}
+				DeckVector.shuffle();			
+				mServer.write("!Start " + 1 + " " + DeckVector.getCardsInOrder() + "!");
 				mGameSheet.startGame(0, this);
 				Log.d("Septica", "Game started!");
 			}
@@ -68,10 +64,7 @@ public class ServerGameActivity extends Activity
 		@Override
 		public void reportAction(String... args)
 		{
-			for (int i = 0; i < mServer.length; i++)
-			{
-				mServer[i].write(args[0]);
-			}
+			mServer.write(args[0]);
 		}
 
 	};
@@ -108,13 +101,8 @@ public class ServerGameActivity extends Activity
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		mContext = this;
-
-		//for (int i = 0; i < mServer.length; i++)
-		//{
-		mServer[0] = new AsyncServerComponent(this, mUILink);
-		mServer[0].execute();
-		//}
-		//buildDialog();
+		mServer = new AsyncServerComponent(this, mUILink);
+		mServer.execute();
 		final ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper_server);
 		Button startButton = (Button) findViewById(R.id.button_server_start);
 		startButton.setOnClickListener(new OnClickListener() {
@@ -123,8 +111,7 @@ public class ServerGameActivity extends Activity
 			public void onClick(View v) {
 				viewFlipper.showNext();
 				mGameSheet = (GameSheet) findViewById(R.id.serverGameSheet);
-				//mServer[0].execute();
-				mServer[0].startGame();
+				mServer.startGame();
 			}
 		});
 	}
@@ -140,10 +127,7 @@ public class ServerGameActivity extends Activity
 	@Override
 	public void onDestroy()
 	{
-		for (int i = 0; i < mServer.length; i++)
-		{
-			mServer[0].stopEverything();
-		}
+		mServer.stopEverything();
 		super.onDestroy();
 	}
 

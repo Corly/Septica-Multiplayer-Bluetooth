@@ -80,6 +80,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 					mServerSocket.close();
 					mManager = new ConnectionManager(socket, mUpdater);
 					mManager.execute();
+					mManager.write("!Ping!");
 					((ServerGameActivity) mContext).runOnUiThread(new Runnable() {
 						
 						@Override
@@ -88,7 +89,6 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 							button.setEnabled(true);
 						}
 					});
-					//this.publishProgress("!Start!");
 					break;
 				} catch (Exception e)
 				{
