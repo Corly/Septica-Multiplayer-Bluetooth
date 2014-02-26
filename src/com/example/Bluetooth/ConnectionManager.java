@@ -68,7 +68,10 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 							timePassedInSeconds = 0;
 							Log.d("BLT", "Received ping from " + mDeviceName + "!");
 						}
-						this.publishProgress(readString);
+						else
+						{
+							this.publishProgress(readString);
+						}
 					}
 				}
 
@@ -129,7 +132,7 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		return mDeviceName;
 	}
 
-	public synchronized void stop()
+	public synchronized void closeConnection()
 	{
 		mIsRunning = false;
 		try

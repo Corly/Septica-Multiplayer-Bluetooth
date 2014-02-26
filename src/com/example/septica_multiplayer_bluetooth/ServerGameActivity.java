@@ -27,8 +27,6 @@ public class ServerGameActivity extends Activity
 {
 	private GameSheet mGameSheet;
 	private AsyncServerComponent mServer;
-	private AlertDialog mAlertDialog;
-	private TextView mAlertDialogText;
 	private Context mContext;
 
 	private UILink mUILink = new UILink()
@@ -68,29 +66,6 @@ public class ServerGameActivity extends Activity
 		}
 
 	};
-
-	private void buildDialog()
-	{
-		AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ServerGameActivity.this);
-		LayoutInflater inflater = getLayoutInflater();
-		View dialoglayout = inflater.inflate(R.layout.dialog, (ViewGroup) getCurrentFocus());
-
-		alertBuilder.setView(dialoglayout);
-		alertBuilder.setOnCancelListener(new OnCancelListener()
-		{
-
-			@Override
-			public void onCancel(DialogInterface dialog)
-			{
-				finish();
-			}
-		});
-		mAlertDialog = alertBuilder.create();
-		mAlertDialog.show();
-
-		mAlertDialogText = (TextView) mAlertDialog.findViewById(R.id.alertTextview);
-		mAlertDialogText.setText("Waiting for players ..");
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

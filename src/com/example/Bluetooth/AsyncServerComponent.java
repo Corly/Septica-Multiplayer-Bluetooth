@@ -18,15 +18,17 @@ import android.widget.Button;
 
 public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 {
+	private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+	private static final UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+	private static final int MAX_CONNECTIONS = 1;
+
 	private BluetoothServerSocket mServerSocket;
 	private final BluetoothAdapter mBltAdapter;
 	private final Context mContext;
 	private final UILink mUpdater;
 	private ConnectionManager mManager;
+	private boolean mIsRunning;
 	
-	private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-	private static final UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-	private static final int MAX_CONNECTIONS = 1;
 
 	public AsyncServerComponent(Context context, UILink UIUpdater)
 	{
@@ -63,16 +65,14 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 		if (mServerSocket == null)
 			return null;
-
-		for (int i = 0; i < MAX_CONNECTIONS; i++)
+		mIsRunning = true;
+		while (mIsRunning)
 		{
 			try
 			{
-				socket = mServerSocket.accept();
+				socket = mServerSocket.accept(20000);
 			} catch (IOException e)
 			{
-				e.printStackTrace();
-				break;
 			}
 			if (socket != null)
 			{
@@ -126,9 +126,10 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 	public synchronized void stopEverything()
 	{
+		mIsRunning = false;
 		try
 		{
-			mManager.stop();
+			mManager.closeConnection();
 			mManager = null;
 		} catch (Exception er)
 		{

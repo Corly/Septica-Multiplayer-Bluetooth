@@ -96,7 +96,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 	{		
 		try
 		{
-			mManager.stop();
+			mManager.closeConnection();
 			mManager = null;
 		}
 		catch (Exception err)
