@@ -23,6 +23,10 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 	private final Context mContext;
 	private final UILink mUpdater;
 	private ConnectionManager mManager;
+	
+	private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+	private static final UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
+	private static final int MAX_CONNECTIONS = 1;
 
 	public AsyncServerComponent(Context context, UILink UIUpdater)
 	{
@@ -36,16 +40,13 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 		if (mBltAdapter.isEnabled())
 		{
-			Intent discoverable = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-			discoverable.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
-					300);
+			Intent discoverable = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+			discoverable.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
 			mContext.startActivity(discoverable);
 		}
 		try
 		{
-			tmp = mBltAdapter.listenUsingRfcommWithServiceRecord("BLT",
-					UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+			tmp = mBltAdapter.listenUsingRfcommWithServiceRecord("BLT", MY_UUID_SECURE);
 
 		} catch (IOException er)
 		{
@@ -62,8 +63,8 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 
 		if (mServerSocket == null)
 			return null;
-		
-		while (!isCancelled())
+
+		for (int i = 0; i < MAX_CONNECTIONS; i++)
 		{
 			try
 			{
@@ -77,14 +78,15 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 			{
 				try
 				{
-					mServerSocket.close();
 					mManager = new ConnectionManager(socket, mUpdater);
 					mManager.execute();
 					mManager.write("!Ping!");
-					((ServerGameActivity) mContext).runOnUiThread(new Runnable() {
-						
+					((ServerGameActivity) mContext).runOnUiThread(new Runnable()
+					{
+
 						@Override
-						public void run() {
+						public void run()
+						{
 							Button button = (Button) ((Activity) mContext).findViewById(R.id.button_server_start);
 							button.setEnabled(true);
 						}
@@ -103,7 +105,16 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 				e.printStackTrace();
 			}
 		}
-		Log.d("BLT","AsyncServerComponent Task stopped succesfully!");
+
+		try
+		{
+			mServerSocket.close();
+		} catch (Exception er)
+		{
+		}
+
+		Log.d("BLT", "AsyncServerComponent Task stopped succesfully!");
+
 		return null;
 	}
 
@@ -120,15 +131,16 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 			mManager.stop();
 			mManager = null;
 		} catch (Exception er)
-		{}
-		
+		{
+		}
+
 		try
 		{
 			mServerSocket.close();
 		} catch (Exception er)
-		{}
-		
-		this.cancel(true);
+		{
+		}
+
 	}
 
 	public synchronized void write(String data)
@@ -136,8 +148,9 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 		if (mManager != null)
 			mManager.write(data);
 	}
-	
-	public synchronized void startGame() {
+
+	public synchronized void startGame()
+	{
 		this.publishProgress("!Start!");
 	}
 }

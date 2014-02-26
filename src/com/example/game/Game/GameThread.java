@@ -58,12 +58,12 @@ public class GameThread extends Thread
 		Log.d("Septica", "Cards are now created!");
 	}
 
-	public void setUILink(UILink linker)
+	public synchronized void setUILink(UILink linker)
 	{
 		mUpdater = linker;
 	}
 
-	public void setWH(int width, int height)
+	public synchronized void setWH(int width, int height)
 	{
 		mHeight = height;
 		mWidth = width;
@@ -74,7 +74,7 @@ public class GameThread extends Thread
 		mTable.setWidthHeight(mWidth, mHeight);
 	}
 
-	public void pauseGame(boolean paused)
+	public synchronized void pauseGame(boolean paused)
 	{
 		mPaused = paused;
 	}

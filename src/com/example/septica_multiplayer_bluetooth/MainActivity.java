@@ -25,12 +25,12 @@ public class MainActivity extends Activity
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		mContext = this;
 		mBltAdapter = BluetoothAdapter.getDefaultAdapter();
-		
+
 		if (mBltAdapter == null)
 		{
 			return;
 		}
-		
+
 		if (!mBltAdapter.isEnabled())
 		{
 			// check if the bluetooth is enabled
@@ -46,16 +46,16 @@ public class MainActivity extends Activity
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	public void HostClick(View view)
 	{
-		Intent intent = new Intent(MainActivity.this , ServerGameActivity.class);
+		Intent intent = new Intent(MainActivity.this, ServerGameActivity.class);
 		this.startActivity(intent);
 	}
-	
+
 	public void ClientClick(View view)
 	{
-		Intent intent = new Intent(MainActivity.this , DevicesActivity.class);
+		Intent intent = new Intent(MainActivity.this, DevicesActivity.class);
 		this.startActivity(intent);
 	}
 

@@ -40,7 +40,7 @@ public class ServerGameActivity extends Activity
 			if (args[0].equals("!Start!"))
 			{
 				DeckVector.init(mContext);
-				DeckVector.shuffle();			
+				DeckVector.shuffle();
 				mServer.write("!Start " + 1 + " " + DeckVector.getCardsInOrder() + "!");
 				mGameSheet.startGame(0, this);
 				Log.d("Septica", "Game started!");
@@ -57,7 +57,7 @@ public class ServerGameActivity extends Activity
 			}
 			if (args[0].contains("has connected"))
 			{
-				
+
 			}
 		}
 
@@ -96,7 +96,7 @@ public class ServerGameActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		//onRestoreInstanceState(savedInstanceState);
+
 		setContentView(R.layout.activity_game);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -105,10 +105,12 @@ public class ServerGameActivity extends Activity
 		mServer.execute();
 		final ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.view_flipper_server);
 		Button startButton = (Button) findViewById(R.id.button_server_start);
-		startButton.setOnClickListener(new OnClickListener() {
-			
+		startButton.setOnClickListener(new OnClickListener()
+		{
+
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				viewFlipper.showNext();
 				mGameSheet = (GameSheet) findViewById(R.id.serverGameSheet);
 				mServer.startGame();

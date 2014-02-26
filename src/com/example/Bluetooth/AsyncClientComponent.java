@@ -16,6 +16,9 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 	private final BluetoothDevice mDevice;
 	private final UILink mUpdater;
 	private ConnectionManager mManager;
+	
+	private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
+	private static final UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
 
 	public AsyncClientComponent(BluetoothDevice device, UILink UIUpdater)
 	{
@@ -24,7 +27,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 		mDevice = device;
 		try
 		{
-			tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+			tmp = device.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
 		}
 		catch (IOException er)
 		{
@@ -35,7 +38,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 	protected Void doInBackground(Void... params)
 	{
 		int num_errors = 0;
-		for (int i = 0; i < 10 && !isCancelled(); i++)
+		for (int i = 0; i < 10; i++)
 		{
 			try
 			{
@@ -49,33 +52,36 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 				num_errors++;
 				try
 				{
-					Thread.sleep(300);
+					Thread.sleep(100);
 				} catch (InterruptedException e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				continue;
-				
+				continue;				
 			}
 		}
 		
 		
-		if (num_errors == 10 || isCancelled())
+		if (num_errors == 10)
 		{
-			this.publishProgress("!Connection error!");
 			try
 			{
 				mDataSocket.close();
 			}
 			catch (Exception e)
 			{}
-			return null;
+			this.publishProgress("!Connection error!");
+			
+			Log.d("BLT","AsyncClientComponent failed to connect to the other side!");
 		}
-		mManager = new ConnectionManager(mDataSocket, mUpdater);
-		mManager.execute();
-		this.publishProgress("!Connection established!");
-		Log.d("BLT", "Connection established to " + mDataSocket.getRemoteDevice().getName());
+		else
+		{
+			mManager = new ConnectionManager(mDataSocket, mUpdater);
+			mManager.execute();
+			this.publishProgress("!Connection established!");
+			Log.d("BLT", "Connection established to " + mDataSocket.getRemoteDevice().getName());
+		}
 		
 		return null;
 	}
@@ -87,7 +93,7 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 	}
 
 	public synchronized void stopEverything()
-	{
+	{		
 		try
 		{
 			mManager.stop();
@@ -96,7 +102,14 @@ public class AsyncClientComponent extends AsyncTask<Void, String, Void>
 		catch (Exception err)
 		{}
 		
-		this.cancel(true);
+		try
+		{
+			mDataSocket.close();
+		}
+		catch(Exception err)
+		{}
+		
+		Log.d("BLT","Released all bluetooth resources from AsyncClientComponent!");
 	}
 
 	public synchronized void write(String data)

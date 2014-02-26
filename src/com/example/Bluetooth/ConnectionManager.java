@@ -30,13 +30,14 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		{
 			tmpInput = mSocket.getInputStream();
 			tmpOutput = mSocket.getOutputStream();
+			mInput = new DataInputStream(tmpInput);
+			mOutput = new DataOutputStream(tmpOutput);
+			mDeviceName = mSocket.getRemoteDevice().getName();
+			
 		} catch (Exception er)
 		{
 			Log.d("BLT", "Couldn't obtain the streams from socket!");
 		}
-		mInput = new DataInputStream(tmpInput);
-		mOutput = new DataOutputStream(tmpOutput);
-		mDeviceName = mSocket.getRemoteDevice().getName();
 	}
 
 	protected synchronized void onPreExecute()
@@ -122,6 +123,11 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		{
 		}
 	}
+	
+	public String getDeviceName()
+	{
+		return mDeviceName;
+	}
 
 	public synchronized void stop()
 	{
@@ -148,6 +154,5 @@ public class ConnectionManager extends AsyncTask<Void, String, Void>
 		{
 		}
 		mIsConnected = false;
-
 	}
 }
