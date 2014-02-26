@@ -70,13 +70,13 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 		{
 			try
 			{
-				socket = mServerSocket.accept(20000);
+				socket = mServerSocket.accept();
 			} catch (IOException e)
 			{
 			}
 			if (socket != null)
 			{
-				try
+				try	
 				{
 					mManager = new ConnectionManager(socket, mUpdater);
 					mManager.execute();
@@ -91,10 +91,10 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 							button.setEnabled(true);
 						}
 					});
-					break;
+					mIsRunning = false;
 				} catch (Exception e)
 				{
-					break;
+					mIsRunning = false;
 				}
 			}
 			try
