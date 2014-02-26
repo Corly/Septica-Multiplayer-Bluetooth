@@ -81,6 +81,7 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 					mManager = new ConnectionManager(socket, mUpdater);
 					mManager.execute();
 					mManager.write("!Ping!");
+					socket = null;
 					((ServerGameActivity) mContext).runOnUiThread(new Runnable()
 					{
 
@@ -91,10 +92,9 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 							button.setEnabled(true);
 						}
 					});
-					mIsRunning = false;
 				} catch (Exception e)
 				{
-					mIsRunning = false;
+					
 				}
 			}
 			try
@@ -123,25 +123,28 @@ public class AsyncServerComponent extends AsyncTask<Void, String, Void>
 		if (mUpdater != null)
 			mUpdater.useData(strings);
 	}
-
-	public synchronized void stopEverything()
+	
+	public synchronized void stopListeningForConnections()
 	{
 		mIsRunning = false;
-		try
-		{
-			mManager.closeConnection();
-			mManager = null;
-		} catch (Exception er)
-		{
-		}
-
 		try
 		{
 			mServerSocket.close();
 		} catch (Exception er)
 		{
+			Log.d("BLT","Error when closing the serverSocket");
 		}
-
+	}
+	
+	public synchronized void closeAllConnections()
+	{
+		try
+		{
+			mManager.closeConnection();
+		} catch (Exception er)
+		{
+			Log.d("BLT","Error when closing the Connection Manager");
+		}
 	}
 
 	public synchronized void write(String data)

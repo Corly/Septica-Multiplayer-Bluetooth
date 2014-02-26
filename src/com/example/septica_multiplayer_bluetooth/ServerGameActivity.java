@@ -40,6 +40,7 @@ public class ServerGameActivity extends Activity
 				DeckVector.init(mContext);
 				DeckVector.shuffle();
 				mServer.write("!Start " + 1 + " " + DeckVector.getCardsInOrder() + "!");
+				mServer.stopListeningForConnections();
 				mGameSheet.startGame(0, this);
 				Log.d("Septica", "Game started!");
 			}
@@ -104,7 +105,8 @@ public class ServerGameActivity extends Activity
 	@Override
 	public void onDestroy()
 	{
-		mServer.stopEverything();
+		mServer.stopListeningForConnections();
+		mServer.closeAllConnections();
 		super.onDestroy();
 	}
 
